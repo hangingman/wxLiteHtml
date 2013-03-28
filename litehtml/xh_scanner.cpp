@@ -2,605 +2,639 @@
 #include "string.h"
 #include <ctype.h>
 
-namespace litehtml 
-{
+namespace litehtml {
 
-  
-    // case sensitive string equality test
-    // s_lowcase shall be lowercase string
-    inline bool equal(const wchar* s, const wchar* s1, size_t length)
-    {
-      switch(length)
-      {
-        case 8: if(s1[7] != s[7]) return false;
-        case 7: if(s1[6] != s[6]) return false;
-        case 6: if(s1[5] != s[5]) return false;
-        case 5: if(s1[4] != s[4]) return false;
-        case 4: if(s1[3] != s[3]) return false;
-        case 3: if(s1[2] != s[2]) return false;
-        case 2: if(s1[1] != s[1]) return false;
-        case 1: if(s1[0] != s[0]) return false;
-        case 0: return true;
-        default: return wcsncmp(s,s1,length) == 0;
-      }
-    }
+// case sensitive string equality test
+// s_lowcase shall be lowercase string
+     inline bool equal(const wchar* s, const wchar* s1, size_t length) {
+	  switch (length) {
+	  case 8:
+	       if (s1[7] != s[7])
+		    return false;
+	  case 7:
+	       if (s1[6] != s[6])
+		    return false;
+	  case 6:
+	       if (s1[5] != s[5])
+		    return false;
+	  case 5:
+	       if (s1[4] != s[4])
+		    return false;
+	  case 4:
+	       if (s1[3] != s[3])
+		    return false;
+	  case 3:
+	       if (s1[2] != s[2])
+		    return false;
+	  case 2:
+	       if (s1[1] != s[1])
+		    return false;
+	  case 1:
+	       if (s1[0] != s[0])
+		    return false;
+	  case 0:
+	       return true;
+	  default:
+	       return wcsncmp(s, s1, length) == 0;
+	  }
+     }
 
-    const wchar* scanner::get_value() 
-    {
-      value[value_length] = 0;
-      return value;
-    }
+     const wchar* scanner::get_value() {
+	  value[value_length] = 0;
+	  return value;
+     }
 
-    const wchar* scanner::get_attr_name() 
-    {
-      attr_name[attr_name_length] = 0;
-      return attr_name;
-    }
+     const wchar* scanner::get_attr_name() {
+	  attr_name[attr_name_length] = 0;
+	  return attr_name;
+     }
 
-    const wchar* scanner::get_tag_name() 
-    {
-      tag_name[tag_name_length] = 0;
-      return tag_name;
-    }
-        
-    scanner::token_type scanner::scan_body() 
-    {
-      wchar c = get_char();
+     const wchar* scanner::get_tag_name() {
+	  tag_name[tag_name_length] = 0;
+	  return tag_name;
+     }
 
-      value_length = 0;
-         
-      bool ws = false;
+     scanner::token_type scanner::scan_body() {
+	  wchar c = get_char();
 
-      if(c == 0) return TT_EOF;
-      else if(c == '<') return scan_tag();
-      else if(c == '&')
-         c = scan_entity();
-      else
-         ws = is_whitespace(c);
-        
-      while(true) 
-      {
-        append_value(c);
-        c = input.get_char();
-        if(c == 0)  { push_back(c); break; }
-        if(c == '<') { push_back(c); break; }
-        if(c == '&') { push_back(c); break; }
-          
-        if(is_whitespace(c) != ws) 
-        {
-          push_back(c);
-          break;
-        }
+	  value_length = 0;
 
-      }
-      return ws? TT_SPACE:TT_WORD;
-    }
+	  bool ws = false;
 
-    scanner::token_type scanner::scan_head()
-    {
-      wchar c = skip_whitespace();
+	  if (c == 0)
+	       return TT_EOF;
+	  else if (c == '<')
+	       return scan_tag();
+	  else if (c == '&')
+	       c = scan_entity();
+	  else
+	       ws = is_whitespace(c);
 
-      if(c == '>') 
-	  { 
-		  if(tag_name_length == 6 && !_wcsnicmp(tag_name, L"script", tag_name_length))
-		  {
-			  c_scan = &scanner::scan_raw_body; 
-			  return scan_raw_body(); 
-		  } else
-		  {
-			  c_scan = &scanner::scan_body; 
-			  return scan_body(); 
-		  }
+	  while (true) {
+	       append_value(c);
+	       c = input.get_char();
+	       if (c == 0) {
+		    push_back(c);
+		    break;
+	       }
+	       if (c == '<') {
+		    push_back(c);
+		    break;
+	       }
+	       if (c == '&') {
+		    push_back(c);
+		    break;
+	       }
+
+	       if (is_whitespace(c) != ws) {
+		    push_back(c);
+		    break;
+	       }
+
+	  }
+	  return ws ? TT_SPACE : TT_WORD;
+     }
+
+     scanner::token_type scanner::scan_head() {
+	  wchar c = skip_whitespace();
+
+	  if (c == '>') {
+	       if (tag_name_length == 6
+		   && !_wcsnicmp(tag_name, L"script", tag_name_length)) {
+		    c_scan = &scanner::scan_raw_body;
+		    return scan_raw_body();
+	       } else {
+		    c_scan = &scanner::scan_body;
+		    return scan_body();
+	       }
 	  }
 
-      if(c == '/')
-      {
-         wchar t = get_char();
-         if(t == '>')   { c_scan = &scanner::scan_body; return TT_TAG_END; }
-         else { push_back(t); return TT_ERROR; } // erroneous situtation - standalone '/'
-      }
+	  if (c == '/') {
+	       wchar t = get_char();
+	       if (t == '>') {
+		    c_scan = &scanner::scan_body;
+		    return TT_TAG_END;
+	       } else {
+		    push_back(t);
+		    return TT_ERROR;
+	       } // erroneous situtation - standalone '/'
+	  }
 
-      attr_name_length = 0;
-      value_length = 0;
+	  attr_name_length = 0;
+	  value_length = 0;
 
-      // attribute name...
-      while(c != '=') 
-      {
-        if( c == 0) return TT_EOF;
-        if( c == '>' ) { push_back(c); return TT_ATTR; } // attribute without value (HTML style)
-        if( is_whitespace(c) )
-        {
-          c = skip_whitespace();
-          if(c != '=') { push_back(c); return TT_ATTR; } // attribute without value (HTML style)
-          else break;
-        }
-        if( c == '<') return TT_ERROR;
-        append_attr_name(c);
-        c = get_char();
-      }
+	  // attribute name...
+	  while (c != '=') {
+	       if (c == 0)
+		    return TT_EOF;
+	       if (c == '>') {
+		    push_back(c);
+		    return TT_ATTR;
+	       } // attribute without value (HTML style)
+	       if (is_whitespace(c)) {
+		    c = skip_whitespace();
+		    if (c != '=') {
+			 push_back(c);
+			 return TT_ATTR;
+		    } // attribute without value (HTML style)
+		    else
+			 break;
+	       }
+	       if (c == '<')
+		    return TT_ERROR;
+	       append_attr_name(c);
+	       c = get_char();
+	  }
 
-      c = skip_whitespace();
-      // attribute value...
-      
-      if(c == '\"')
-        while(c = get_char())
-        {
-            if(c == '\"') return TT_ATTR;
-            if(c == '&') c = scan_entity();
-            append_value(c);
-        }
-      else if(c == '\'') // allowed in html
-        while(c = get_char())
-        {
-            if(c == '\'') return TT_ATTR;
-            if(c == '&') c = scan_entity();
-            append_value(c);
-        }
-      else  // scan token, allowed in html: e.g. align=center
-        do
-        {
-            if( is_whitespace(c) ) return TT_ATTR;
-            /* these two removed in favour of better html support:
-            if( c == '/' || c == '>' ) { push_back(c); return TT_ATTR; }
-            if( c == '&' ) c = scan_entity();*/
-            if( c == '>' ) { push_back(c); return TT_ATTR; }
-            append_value(c);
-        } while(c = get_char());
+	  c = skip_whitespace();
+	  // attribute value...
 
-      return TT_ERROR;
-    }
+	  if (c == '\"')
+	       while (c = get_char()) {
+		    if (c == '\"')
+			 return TT_ATTR;
+		    if (c == '&')
+			 c = scan_entity();
+		    append_value(c);
+	       }
+	  else if (c == '\'') // allowed in html
+	       while (c = get_char()) {
+		    if (c == '\'')
+			 return TT_ATTR;
+		    if (c == '&')
+			 c = scan_entity();
+		    append_value(c);
+	       }
+	  else
+	       // scan token, allowed in html: e.g. align=center
+	       do {
+		    if (is_whitespace(c))
+			 return TT_ATTR;
+		    /* these two removed in favour of better html support:
+		       if( c == '/' || c == '>' ) { push_back(c); return TT_ATTR; }
+		       if( c == '&' ) c = scan_entity();*/
+		    if (c == '>') {
+			 push_back(c);
+			 return TT_ATTR;
+		    }
+		    append_value(c);
+	       } while (c = get_char());
 
-    // caller already consumed '<'
-    // scan header start or tag tail
-    scanner::token_type scanner::scan_tag() 
-    {
-      tag_name_length = 0;
+	  return TT_ERROR;
+     }
 
-      wchar c = get_char();
+// caller already consumed '<'
+// scan header start or tag tail
+     scanner::token_type scanner::scan_tag() {
+	  tag_name_length = 0;
 
-      bool is_tail = c == '/';
-      if(is_tail) c = get_char();
-      
-      while(c) 
-      {
-        if(is_whitespace(c)) { c = skip_whitespace(); break; }
-        if(c == '/' || c == '>') break;
-        append_tag_name(c);
+	  wchar c = get_char();
 
-        switch(tag_name_length)
-        {
-        case 3: 
-          if(equal(tag_name,L"!--",3))  { c_scan = &scanner::scan_comment; return TT_COMMENT_START; }
-          break;
-        case 8:
-			if( equal(tag_name,L"![CDATA[",8) ) { c_scan = &scanner::scan_cdata; return TT_CDATA_START; }
-			if( equal(tag_name,L"!DOCTYPE",8) ) { c_scan = &scanner::scan_entity_decl; return TT_DOCTYPE_START; }
-          break;
-		case 7:
-			if( equal(tag_name,L"!ENTITY",8) ) { c_scan = &scanner::scan_entity_decl; return TT_ENTITY_START; }
-			break;
-        }
+	  bool is_tail = c == '/';
+	  if (is_tail)
+	       c = get_char();
 
-        c = get_char();
-      }
- 
-      if(c == 0) return TT_ERROR;    
-              
-      if(is_tail)
-      {
-          if(c == '>') return TT_TAG_END;
-          return TT_ERROR;
-      }
-      else 
-           push_back(c);
-      
-      c_scan = &scanner::scan_head;
-      return TT_TAG_START;
-    }
+	  while (c) {
+	       if (is_whitespace(c)) {
+		    c = skip_whitespace();
+		    break;
+	       }
+	       if (c == '/' || c == '>')
+		    break;
+	       append_tag_name(c);
 
-    // skip whitespaces.
-    // returns first non-whitespace char
-    wchar scanner::skip_whitespace() 
-    {
-        while(wchar c = get_char()) 
-        {
-            if(!is_whitespace(c)) return c;
-        }
-        return 0;
-    }
+	       switch (tag_name_length) {
+	       case 3:
+		    if (equal(tag_name, L"!--", 3)) {
+			 c_scan = &scanner::scan_comment;
+			 return TT_COMMENT_START;
+		    }
+		    break;
+	       case 8:
+		    if (equal(tag_name, L"![CDATA[", 8)) {
+			 c_scan = &scanner::scan_cdata;
+			 return TT_CDATA_START;
+		    }
+		    if (equal(tag_name, L"!DOCTYPE", 8)) {
+			 c_scan = &scanner::scan_entity_decl;
+			 return TT_DOCTYPE_START;
+		    }
+		    break;
+	       case 7:
+		    if (equal(tag_name, L"!ENTITY", 8)) {
+			 c_scan = &scanner::scan_entity_decl;
+			 return TT_ENTITY_START;
+		    }
+		    break;
+	       }
 
-    void    scanner::push_back(wchar c) { input_char = c; }
+	       c = get_char();
+	  }
 
-    wchar scanner::get_char() 
-    { 
-      if(input_char) { wchar t(input_char); input_char = 0; return t; }
-      return input.get_char();
-    }
+	  if (c == 0)
+	       return TT_ERROR;
 
+	  if (is_tail) {
+	       if (c == '>')
+		    return TT_TAG_END;
+	       return TT_ERROR;
+	  } else
+	       push_back(c);
 
-    // caller consumed '&'
-    wchar scanner::scan_entity() 
-    {
-      wchar buf[32];
-      int i = 0;
-      wchar t;
-      for(; i < 31 ; ++i )
-      {
-        t = get_char();
+	  c_scan = &scanner::scan_head;
+	  return TT_TAG_START;
+     }
 
-		if(t == ';')
-			break;
+// skip whitespaces.
+// returns first non-whitespace char
+     wchar scanner::skip_whitespace() {
+	  while (wchar c = get_char()) {
+	       if (!is_whitespace(c))
+		    return c;
+	  }
+	  return 0;
+     }
 
-        if(t == 0) return TT_EOF;
-		if( !isalnum(t) && t != '#' )
-        {
-          push_back(t);
-          break; // appears a erroneous entity token.
-                 // but we try to use it.
-        }
-        buf[i] = char(t); 
-      }
-      buf[i] = 0;
-      if(i == 2)  
-      {
-        if(equal(buf,L"gt",2)) return '>';
-        if(equal(buf,L"lt",2)) return '<';
-      }
-      else if(i == 3 && equal(buf,L"amp",3)) 
-        return '&';
-      else if(i == 4) 
-      {
-        if(equal(buf,L"apos",4)) return '\'';
-        if(equal(buf,L"quot",4)) return '\"';
-      }
-      t = resolve_entity(buf,i);
-      if(t) return t;
-      // no luck ...
-      append_value('&');
-      for(int n = 0; n < i; ++n)
-        append_value(buf[n]);
-      return ';';
-    }
+     void scanner::push_back(wchar c) {
+	  input_char = c;
+     }
 
-    bool scanner::is_whitespace(wchar c)
-    {
-        return c <= ' ' 
-            && (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f');
-    }
+     wchar scanner::get_char() {
+	  if (input_char) {
+	       wchar t(input_char);
+	       input_char = 0;
+	       return t;
+	  }
+	  return input.get_char();
+     }
 
-    void scanner::append_value(wchar c) 
-    { 
-      if(value_length < (MAX_TOKEN_SIZE - 1)) 
-        value[value_length++] = c;
-    }
+// caller consumed '&'
+     wchar scanner::scan_entity() {
+	  wchar buf[32];
+	  int i = 0;
+	  wchar t;
+	  for (; i < 31; ++i) {
+	       t = get_char();
 
-    void scanner::append_attr_name(wchar c)
-    {
-      if(attr_name_length < (MAX_NAME_SIZE - 1)) 
-        attr_name[attr_name_length++] = c;
-    }
+	       if (t == ';')
+		    break;
 
-    void scanner::append_tag_name(wchar c)
-    {
-      if(tag_name_length < (MAX_NAME_SIZE - 1)) 
-        tag_name[tag_name_length++] = c;
-    }
+	       if (t == 0)
+		    return TT_EOF;
+	       if (!isalnum(t) && t != '#') {
+		    push_back(t);
+		    break; // appears a erroneous entity token.
+		    // but we try to use it.
+	       }
+	       buf[i] = char(t);
+	  }
+	  buf[i] = 0;
+	  if (i == 2) {
+	       if (equal(buf, L"gt", 2))
+		    return '>';
+	       if (equal(buf, L"lt", 2))
+		    return '<';
+	  } else if (i == 3 && equal(buf, L"amp", 3))
+	       return '&';
+	  else if (i == 4) {
+	       if (equal(buf, L"apos", 4))
+		    return '\'';
+	       if (equal(buf, L"quot", 4))
+		    return '\"';
+	  }
+	  t = resolve_entity(buf, i);
+	  if (t)
+	       return t;
+	  // no luck ...
+	  append_value('&');
+	  for (int n = 0; n < i; ++n)
+	       append_value(buf[n]);
+	  return ';';
+     }
 
-    scanner::token_type scanner::scan_comment()
-    {
-      if(got_tail)
-      {
-        c_scan = &scanner::scan_body;
-        got_tail = false;
-        return TT_COMMENT_END;
-      }
-      for(value_length = 0; value_length < (MAX_TOKEN_SIZE - 1); ++value_length)
-      {
-        wchar c = get_char();
-        if( c == 0) return TT_EOF;
-        value[value_length] = c;
-        
-        if(value_length >= 2 
-          && value[value_length] == '>' 
-          && value[value_length - 1] == '-' 
-          && value[value_length - 2] == '-')
-        {
-          got_tail = true;
-          value_length -= 2;
-          break;
-        }
-      }
-      return TT_DATA;
-    }
+     bool scanner::is_whitespace(wchar c) {
+	  return c <= ' '
+	       && (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f');
+     }
 
-    scanner::token_type scanner::scan_cdata()
-    {
-      if(got_tail)
-      {
-        c_scan = &scanner::scan_body;
-        got_tail = false;
-        return TT_CDATA_END;
-      }
-      for(value_length = 0; value_length < (MAX_TOKEN_SIZE - 1); ++value_length)
-      {
-        wchar c = get_char();
-        if( c == 0) return TT_EOF;
-        value[value_length] = c;
+     void scanner::append_value(wchar c) {
+	  if (value_length < (MAX_TOKEN_SIZE - 1))
+	       value[value_length++] = c;
+     }
 
-        if(value_length >= 2 
-          && value[value_length] == '>' 
-          && value[value_length - 1] == ']' 
-          && value[value_length - 2] == ']')
-        {
-          got_tail = true;
-          value_length -= 2;
-          break;
-        }
-      }
-      return TT_DATA;
-    }
+     void scanner::append_attr_name(wchar c) {
+	  if (attr_name_length < (MAX_NAME_SIZE - 1))
+	       attr_name[attr_name_length++] = c;
+     }
 
-    scanner::token_type scanner::scan_pi()
-    {
-      if(got_tail)
-      {
-        c_scan = &scanner::scan_body;
-        got_tail = false;
-        return TT_PI_END;
-      }
-      for(value_length = 0; value_length < (MAX_TOKEN_SIZE - 1); ++value_length)
-      {
-        wchar c = get_char();
-        if( c == 0) return TT_EOF;
-        value[value_length] = c;
+     void scanner::append_tag_name(wchar c) {
+	  if (tag_name_length < (MAX_NAME_SIZE - 1))
+	       tag_name[tag_name_length++] = c;
+     }
 
-        if(value_length >= 1 
-          && value[value_length] == '>' 
-          && value[value_length - 1] == '?')
-        {
-          got_tail = true;
-          value_length -= 1;
-          break;
-        }
-      }
-      return TT_DATA;
-    }
+     scanner::token_type scanner::scan_comment() {
+	  if (got_tail) {
+	       c_scan = &scanner::scan_body;
+	       got_tail = false;
+	       return TT_COMMENT_END;
+	  }
+	  for (value_length = 0; value_length < (MAX_TOKEN_SIZE - 1);
+	       ++value_length) {
+	       wchar c = get_char();
+	       if (c == 0)
+		    return TT_EOF;
+	       value[value_length] = c;
 
-	scanner::token_type scanner::scan_entity_decl()
-	{
-		if(got_tail)
-		{
-			c_scan = &scanner::scan_body;
-			got_tail = false;
-			return TT_ENTITY_END;
-		}
-		wchar t;
-		unsigned int tc = 0;
-		for(value_length = 0; value_length < (MAX_TOKEN_SIZE - 1); ++value_length)
-		{
-			t = get_char();
-			if( t == 0 ) return TT_EOF;
-			value[value_length] = t;
-			if(t == '\"') tc++;
-			else if( t == '>' && (tc & 1) == 0 )
-			{
-				got_tail = true;
-				break;
-			}
-		}
-		return TT_DATA;
-	}
+	       if (value_length >= 2 && value[value_length] == '>'
+		   && value[value_length - 1] == '-'
+		   && value[value_length - 2] == '-') {
+		    got_tail = true;
+		    value_length -= 2;
+		    break;
+	       }
+	  }
+	  return TT_DATA;
+     }
 
-	scanner::token_type scanner::scan_doctype_decl()
-	{
-		if(got_tail)
-		{
-			c_scan = &scanner::scan_body;
-			got_tail = false;
-			return TT_DOCTYPE_END;
-		}
-		wchar t;
-		unsigned int tc = 0;
-		for(value_length = 0; value_length < (MAX_TOKEN_SIZE - 1); ++value_length)
-		{
-			t = get_char();
-			if( t == 0 ) return TT_EOF;
-			value[value_length] = t;
-			if(t == '\"') tc++;
-			else if( t == '>' && (tc & 1) == 0 )
-			{
-				got_tail = true;
-				break;
-			}
-		}
-		return TT_DATA;
-	}
+     scanner::token_type scanner::scan_cdata() {
+	  if (got_tail) {
+	       c_scan = &scanner::scan_body;
+	       got_tail = false;
+	       return TT_CDATA_END;
+	  }
+	  for (value_length = 0; value_length < (MAX_TOKEN_SIZE - 1);
+	       ++value_length) {
+	       wchar c = get_char();
+	       if (c == 0)
+		    return TT_EOF;
+	       value[value_length] = c;
 
-	struct
-	{
-		wchar szCode[10];
-		wchar Code;
-	} g_HTMLCodes[] = 
-	{
-		{L"&quot;",L'"'},
-		{L"&amp;",L'&'},
-		{L"&lt;",L'<'},
-		{L"&gt;",L'>'},
-		{L"&nbsp;",L'†'},
-		{L"&iexcl;",L'°'},
-		{L"&cent;",L'¢'},
-		{L"&pound;",L'£'},
-		{L"&curren;",L'§'},
-		{L"&yen;",L'•'},
-		{L"&brvbar;",L'¶'},
-		{L"&sect;",L'ß'},
-		{L"&uml;",L'®'},
-		{L"&copy;",L'©'},
-		{L"&ordf;",L'™'},
-		{L"&laquo;",L'´'},
-		{L"&not;",L'¨'},
-		{L"&shy;",L'≠'},
-		{L"&reg;",L'Æ'},
-		{L"&macr;",L'Ø'},
-		{L"&deg;",L'∞'},
-		{L"&plusmn;",L'±'},
-		{L"&sup2;",L'≤'},
-		{L"&sup3;",L'≥'},
-		{L"&acute;",L'¥'},
-		{L"&micro;",L'µ'},
-		{L"&para;",L'∂'},
-		{L"&middot;",L'∑'},
-		{L"&cedil;",L'∏'},
-		{L"&sup1;",L'π'},
-		{L"&ordm;",L'∫'},
-		{L"&raquo;",L'ª'},
-		{L"&frac14;",L'º'},
-		{L"&frac12;",L'Ω'},
-		{L"&frac34;",L'æ'},
-		{L"&iquest;",L'ø'},
-		{L"&Agrave;",L'¿'},
-		{L"&Aacute;",L'¡'},
-		{L"&Acirc;",L'¬'},
-		{L"&Atilde;",L'√'},
-		{L"&Auml;",L'ƒ'},
-		{L"&Aring;",L'≈'},
-		{L"&AElig;",L'∆'},
-		{L"&Ccedil;",L'«'},
-		{L"&Egrave;",L'»'},
-		{L"&Eacute;",L'…'},
-		{L"&Ecirc;",L' '},
-		{L"&Euml;",L'À'},
-		{L"&Igrave;",L'Ã'},
-		{L"&Iacute;",L'Õ'},
-		{L"&Icirc;",L'Œ'},
-		{L"&Iuml;",L'œ'},
-		{L"&ETH;",L'–'},
-		{L"&Ntilde;",L'—'},
-		{L"&Ograve;",L'“'},
-		{L"&Oacute;",L'”'},
-		{L"&Ocirc;",L'‘'},
-		{L"&Otilde;",L'’'},
-		{L"&Ouml;",L'÷'},
-		{L"&times;",L'◊'},
-		{L"&Oslash;",L'ÿ'},
-		{L"&Ugrave;",L'Ÿ'},
-		{L"&Uacute;",L'⁄'},
-		{L"&Ucirc;",L'€'},
-		{L"&Uuml;",L'‹'},
-		{L"&Yacute;",L'›'},
-		{L"&THORN;",L'ﬁ'},
-		{L"&szlig;",L'ﬂ'},
-		{L"&agrave;",L'‡'},
-		{L"&aacute;",L'·'},
-		{L"&acirc;",L'‚'},
-		{L"&atilde;",L'„'},
-		{L"&auml;",L'‰'},
-		{L"&aring;",L'Â'},
-		{L"&aelig;",L'Ê'},
-		{L"&ccedil;",L'Á'},
-		{L"&egrave;",L'Ë'},
-		{L"&eacute;",L'È'},
-		{L"&ecirc;",L'Í'},
-		{L"&euml;",L'Î'},
-		{L"&igrave;",L'Ï'},
-		{L"&iacute;",L'Ì'},
-		{L"&icirc;",L'Ó'},
-		{L"&iuml;",L'Ô'},
-		{L"&eth;",L''},
-		{L"&ntilde;",L'Ò'},
-		{L"&ograve;",L'Ú'},
-		{L"&oacute;",L'Û'},
-		{L"&ocirc;",L'Ù'},
-		{L"&otilde;",L'ı'},
-		{L"&ouml;",L'ˆ'},
-		{L"&divide;",L'˜'},
-		{L"&oslash;",L'¯'},
-		{L"&ugrave;",L'˘'},
-		{L"&uacute;",L'˙'},
-		{L"&ucirc;",L'˚'},
-		{L"&uuml;",L'¸'},
-		{L"&yacute;",L'˝'},
-		{L"&thorn;",L'˛'},
-		{L"&yuml;",L'ˇ'},
-		{L"&OElig;",L'E'},
-		{L"&oelig;",L'e'},
-		{L"&Scaron;",L'S'},
-		{L"&scaron;",L's'},
-		{L"&Yuml;",L'ˇ'},
-		{L"&fnof;",L'f'},
-		{L"&circ;",L'^'},
-		{L"&tilde;",L'~'},
-		{L"&ndash;",L'-'},
-		{L"&mdash;",L'-'},
-		{L"&lsquo;",L'ë'},
-		{L"&rsquo;",L'í'},
-		{L"&sbquo;",L','},
-		{L"&ldquo;",L'\"'},
-		{L"&rdquo;",L'\"'},
-		{L"&bdquo;",L'Ñ'},
-		{L"&dagger;",L'Ü'},
-		{L"&Dagger;",L'á'},
-		{L"&bull;",L'ï'},
-		{L"&hellip;",L'Ö'},
-		{L"&permil;",L'â'},
-		{L"&lsaquo;",L'ã'},
-		{L"&rsaquo;",L'õ'},
-		{L"&euro;",L'Ä'},
-		{L"&trade;",L'ô'},
-		{{(char)0x97,(char)0x00},L'-'},
-		{{(char)0xA0,(char)0x00},L' '},
-		{L"",0}
-	};
+	       if (value_length >= 2 && value[value_length] == '>'
+		   && value[value_length - 1] == ']'
+		   && value[value_length - 2] == ']') {
+		    got_tail = true;
+		    value_length -= 2;
+		    break;
+	       }
+	  }
+	  return TT_DATA;
+     }
 
-	litehtml::wchar scanner::resolve_entity( const wchar* buf, int buf_size )
-	{
-		if(buf[0] == '#')
-		{
-			if(buf[1] == 'x' || buf[1] == 'X')
-			{
-				wchar* end = 0;
-				return (wchar) wcstol(buf + 2, &end, 16);
-			} else
-			{
-				return (wchar) _wtoi(buf + 1);
-			}
-		} else
-		{
-			for(int i=0; g_HTMLCodes[i].szCode[0]; i++)
-			{
-				if(!_wcsnicmp(g_HTMLCodes[i].szCode + 1, buf, buf_size))
-				{
-					return g_HTMLCodes[i].Code;
-				}
-			}
-		}
-		return 0;
-	}
+     scanner::token_type scanner::scan_pi() {
+	  if (got_tail) {
+	       c_scan = &scanner::scan_body;
+	       got_tail = false;
+	       return TT_PI_END;
+	  }
+	  for (value_length = 0; value_length < (MAX_TOKEN_SIZE - 1);
+	       ++value_length) {
+	       wchar c = get_char();
+	       if (c == 0)
+		    return TT_EOF;
+	       value[value_length] = c;
 
-	scanner::token_type scanner::scan_raw_body()
-	{
-		if(got_tail)
-		{
-			c_scan = &scanner::scan_body;
-			got_tail = false;
-			return TT_TAG_END;
-		}
-		for(value_length = 0; value_length < (MAX_TOKEN_SIZE - 1); ++value_length)
-		{
-			wchar c = get_char();
-			if( c == 0) return TT_EOF;
-			value[value_length] = c;
+	       if (value_length >= 1 && value[value_length] == '>'
+		   && value[value_length - 1] == '?') {
+		    got_tail = true;
+		    value_length -= 1;
+		    break;
+	       }
+	  }
+	  return TT_DATA;
+     }
 
-			if(value_length >= 8 && !_wcsnicmp(value + value_length - 8, L"</script>", 9))
-			{
-				got_tail = true;
-				value_length -= 8;
-				break;
-			}
-		}
-		value[value_length] = 0;
-		return TT_DATA;
-	}
+     scanner::token_type scanner::scan_entity_decl() {
+	  if (got_tail) {
+	       c_scan = &scanner::scan_body;
+	       got_tail = false;
+	       return TT_ENTITY_END;
+	  }
+	  wchar t;
+	  unsigned int tc = 0;
+	  for (value_length = 0; value_length < (MAX_TOKEN_SIZE - 1);
+	       ++value_length) {
+	       t = get_char();
+	       if (t == 0)
+		    return TT_EOF;
+	       value[value_length] = t;
+	       if (t == '\"')
+		    tc++;
+	       else if (t == '>' && (tc & 1) == 0) {
+		    got_tail = true;
+		    break;
+	       }
+	  }
+	  return TT_DATA;
+     }
+
+     scanner::token_type scanner::scan_doctype_decl() {
+	  if (got_tail) {
+	       c_scan = &scanner::scan_body;
+	       got_tail = false;
+	       return TT_DOCTYPE_END;
+	  }
+	  wchar t;
+	  unsigned int tc = 0;
+	  for (value_length = 0; value_length < (MAX_TOKEN_SIZE - 1);
+	       ++value_length) {
+	       t = get_char();
+	       if (t == 0)
+		    return TT_EOF;
+	       value[value_length] = t;
+	       if (t == '\"')
+		    tc++;
+	       else if (t == '>' && (tc & 1) == 0) {
+		    got_tail = true;
+		    break;
+	       }
+	  }
+	  return TT_DATA;
+     }
+
+     struct {
+	  wchar szCode[10];
+	  wchar Code;
+     }g_HTMLCodes[] =
+     {
+	  {	L"&quot;",L'"'},
+	  {	L"&amp;",L'&'},
+	  {	L"&lt;",L'<'},
+	  {	L"&gt;",L'>'},
+	  {	L"&nbsp;",L'ÔøΩ},
+	{	L"&iexcl;",L'ÔΩ°'},
+	{	L"&cent;",L'ÔΩ¢'},
+	{	L"&pound;",L'ÔΩ£'},
+	{	L"&curren;",L'ÔΩ§'},
+	{	L"&yen;",L'ÔΩ•'},
+	{	L"&brvbar;",L'ÔΩ¶'},
+	{	L"&sect;",L'ÔΩß'},
+	{	L"&uml;",L'ÔΩ®'},
+	{	L"&copy;",L'ÔΩ©'},
+	{	L"&ordf;",L'ÔΩ™'},
+	{	L"&laquo;",L'ÔΩ´'},
+	{	L"&not;",L'ÔΩ¨'},
+	{	L"&shy;",L'ÔΩ≠'},
+	{	L"&reg;",L'ÔΩÆ'},
+	{	L"&macr;",L'ÔΩØ'},
+	{	L"&deg;",L'ÔΩ∞'},
+	{	L"&plusmn;",L'ÔΩ±'},
+	{	L"&sup2;",L'ÔΩ≤'},
+	{	L"&sup3;",L'ÔΩ≥'},
+	{	L"&acute;",L'ÔΩ¥'},
+	{	L"&micro;",L'ÔΩµ'},
+	{	L"&para;",L'ÔΩ∂'},
+	{	L"&middot;",L'ÔΩ∑'},
+	{	L"&cedil;",L'ÔΩ∏'},
+	{	L"&sup1;",L'ÔΩπ'},
+	{	L"&ordm;",L'ÔΩ∫'},
+	{	L"&raquo;",L'ÔΩª'},
+	{	L"&frac14;",L'ÔΩº'},
+	{	L"&frac12;",L'ÔΩΩ'},
+	{	L"&frac34;",L'ÔΩæ'},
+	{	L"&iquest;",L'ÔΩø'},
+	{	L"&Agrave;",L'ÔæÄ'},
+	{	L"&Aacute;",L'ÔæÅ'},
+	{	L"&Acirc;",L'ÔæÇ'},
+	{	L"&Atilde;",L'ÔæÉ'},
+	{	L"&Auml;",L'ÔæÑ'},
+	{	L"&Aring;",L'ÔæÖ'},
+	{	L"&AElig;",L'ÔæÜ'},
+	{	L"&Ccedil;",L'Ôæá'},
+	{	L"&Egrave;",L'Ôæà'},
+	{	L"&Eacute;",L'Ôæâ'},
+	{	L"&Ecirc;",L'Ôæä'},
+	{	L"&Euml;",L'Ôæã'},
+	{	L"&Igrave;",L'Ôæå'},
+	{	L"&Iacute;",L'Ôæç'},
+	{	L"&Icirc;",L'Ôæé'},
+	{	L"&Iuml;",L'Ôæè'},
+	{	L"&ETH;",L'Ôæê'},
+	{	L"&Ntilde;",L'Ôæë'},
+	{	L"&Ograve;",L'Ôæí'},
+	{	L"&Oacute;",L'Ôæì'},
+	{	L"&Ocirc;",L'Ôæî'},
+	{	L"&Otilde;",L'Ôæï'},
+	{	L"&Ouml;",L'Ôæñ'},
+	{	L"&times;",L'Ôæó'},
+	{	L"&Oslash;",L'Ôæò'},
+	{	L"&Ugrave;",L'Ôæô'},
+	{	L"&Uacute;",L'Ôæö'},
+	{	L"&Ucirc;",L'Ôæõ'},
+	{	L"&Uuml;",L'Ôæú'},
+	{	L"&Yacute;",L'Ôæù'},
+	{	L"&THORN;",L'Ôæû'},
+	{	L"&szlig;",L'Ôæü'},
+	{	L"&agrave;",L'ÔøΩ},
+	  {	L"&aacute;",L'ÔøΩ},
+	{	L"&acirc;",L'ÔøΩ},
+	  {	L"&atilde;",L'ÔøΩ},
+	{	L"&auml;",L'ÔøΩ},
+	  {	L"&aring;",L'ÔøΩ},
+	{	L"&aelig;",L'ÔøΩ},
+	  {	L"&ccedil;",L'ÔøΩ},
+	{	L"&egrave;",L'ÔøΩ},
+	  {	L"&eacute;",L'ÔøΩ},
+	{	L"&ecirc;",L'ÔøΩ},
+	  {	L"&euml;",L'ÔøΩ},
+	{	L"&igrave;",L'ÔøΩ},
+	  {	L"&iacute;",L'ÔøΩ},
+	{	L"&icirc;",L'ÔøΩ},
+	  {	L"&iuml;",L'ÔøΩ},
+	{	L"&eth;",L'ÔøΩ},
+	  {	L"&ntilde;",L'ÔøΩ},
+	{	L"&ograve;",L'ÔøΩ},
+	  {	L"&oacute;",L'ÔøΩ},
+	{	L"&ocirc;",L'ÔøΩ},
+	  {	L"&otilde;",L'ÔøΩ},
+	{	L"&ouml;",L'ÔøΩ},
+	  {	L"&divide;",L'ÔøΩ},
+	{	L"&oslash;",L'ÔøΩ},
+	  {	L"&ugrave;",L'ÔøΩ},
+	{	L"&uacute;",L'ÔøΩ},
+	  {	L"&ucirc;",L'ÔøΩ},
+	{	L"&uuml;",L'ÔøΩ},
+	  {	L"&yacute;",L'ÔøΩ},
+	{	L"&thorn;",L'ÔøΩ},
+	  {	L"&yuml;",L'ÔøΩ},
+	{	L"&OElig;",L'E'},
+	{	L"&oelig;",L'e'},
+	{	L"&Scaron;",L'S'},
+	{	L"&scaron;",L's'},
+	{	L"&Yuml;",L'ÔøΩ},
+	  {	L"&fnof;",L'f'},
+	  {	L"&circ;",L'^'},
+	  {	L"&tilde;",L'~'},
+	  {	L"&ndash;",L'-'},
+	  {	L"&mdash;",L'-'},
+	  {	L"&lsquo;",L'ÔøΩ},
+	{	L"&rsquo;",L'ÔøΩ},
+	  {	L"&sbquo;",L','},
+	  {	L"&ldquo;",L'\"'},
+	  {	L"&rdquo;",L'\"'},
+	  {	L"&bdquo;",L'ÔøΩ},
+	{	L"&dagger;",L'ÔøΩ},
+	  {	L"&Dagger;",L'ÔøΩ},
+	{	L"&bull;",L'ÔøΩ},
+	  {	L"&hellip;",L'ÔøΩ},
+	{	L"&permil;",L'ÔøΩ},
+	  {	L"&lsaquo;",L'ÔøΩ},
+	{	L"&rsaquo;",L'ÔøΩ},
+	  {	L"&euro;",L'ÔøΩ},
+	{	L"&trade;",L'ÔøΩ},
+	  {	{	(char)0x97,(char)0x00},L'-'},
+	  {	{	(char)0xA0,(char)0x00},L' '},
+	  {	L"",0}
+     };
+
+     litehtml::wchar scanner::resolve_entity( const wchar* buf, int buf_size )
+     {
+	  if(buf[0] == '#')
+	  {
+	       if(buf[1] == 'x' || buf[1] == 'X')
+	       {
+		    wchar* end = 0;
+		    return (wchar) wcstol(buf + 2, &end, 16);
+	       } else
+	       {
+		    return (wchar) _wtoi(buf + 1);
+	       }
+	  } else
+	  {
+	       for(int i=0; g_HTMLCodes[i].szCode[0]; i++)
+	       {
+		    if(!_wcsnicmp(g_HTMLCodes[i].szCode + 1, buf, buf_size))
+		    {
+			 return g_HTMLCodes[i].Code;
+		    }
+	       }
+	  }
+	  return 0;
+     }
+
+     scanner::token_type scanner::scan_raw_body()
+     {
+	  if(got_tail)
+	  {
+	       c_scan = &scanner::scan_body;
+	       got_tail = false;
+	       return TT_TAG_END;
+	  }
+	  for(value_length = 0; value_length < (MAX_TOKEN_SIZE - 1); ++value_length)
+	  {
+	       wchar c = get_char();
+	       if( c == 0) return TT_EOF;
+	       value[value_length] = c;
+
+	       if(value_length >= 8 && !_wcsnicmp(value + value_length - 8, L"</script>", 9))
+	       {
+		    got_tail = true;
+		    value_length -= 8;
+		    break;
+	       }
+	  }
+	  value[value_length] = 0;
+	  return TT_DATA;
+     }
 
 }
- 
+

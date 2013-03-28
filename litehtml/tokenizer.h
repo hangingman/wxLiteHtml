@@ -33,7 +33,8 @@ freely, subject to the following restrictions:
 				customizable way of breaking up strings.
 *********************************************************************/
 
-#pragma once
+#ifndef __
+#define __
 
 #include <vector>
 #include <string>

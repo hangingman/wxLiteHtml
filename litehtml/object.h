@@ -1,115 +1,95 @@
-#pragma once
+#ifndef _OBJECT_H_
+#define _OBJECT_H_
 
-namespace litehtml
-{
-	class object
-	{
-	protected:
-		unsigned long volatile	m_refCount;
-	public:
-		object()
-		{ 
-			m_refCount = 0;
-		}
-		virtual ~object()
-		{
+namespace litehtml {
+  class object {
+  protected:
+    unsigned long volatile m_refCount;
+  public:
+    object() {
+      m_refCount = 0;
+    }
+    virtual ~object() {
 
-		}
+    }
 
-		void addRef()
-		{ 
-			m_refCount++;
-		}
-		
-		void release()
-		{
-			if(!(--m_refCount)) delete this;
-		}
-	};
+    void addRef() {
+      m_refCount++;
+    }
 
-	template<class T>
-	class object_ptr
-	{
-		T*	m_ptr;
-	public:
-		object_ptr()
-		{
-			m_ptr = 0;
-		}
+    void release() {
+      if (!(--m_refCount))
+	delete this;
+    }
+  };
 
-		object_ptr(T* ptr)
-		{
-			m_ptr = ptr;
-			if(m_ptr)
-			{
-				m_ptr->addRef();
-			}
-		}
+  template<class T>
+    class object_ptr {
+    T* m_ptr;
+  public:
+    object_ptr() {
+      m_ptr = 0;
+    }
 
-		object_ptr(const object_ptr<T>& val)
-		{
-			m_ptr = val.m_ptr;
-			if(m_ptr)
-			{
-				m_ptr->addRef();
-			}
-		}
+    object_ptr(T* ptr) {
+      m_ptr = ptr;
+      if (m_ptr) {
+	m_ptr->addRef();
+      }
+    }
 
-		~object_ptr()
-		{
-			if(m_ptr)
-			{
-				m_ptr->release();
-			}
-			m_ptr = 0;
-		}
+    object_ptr(const object_ptr<T>& val) {
+      m_ptr = val.m_ptr;
+      if (m_ptr) {
+	m_ptr->addRef();
+      }
+    }
 
-		void operator=(const object_ptr<T>& val)
-		{
-			T* oldPtr = m_ptr;
-			m_ptr = val.m_ptr;
-			if(m_ptr)
-			{
-				m_ptr->addRef();
-			}
-			if(oldPtr)
-			{
-				oldPtr->release();
-			}
-		}
+    ~object_ptr() {
+      if (m_ptr) {
+	m_ptr->release();
+      }
+      m_ptr = 0;
+    }
 
-		void operator=(T* val)
-		{
-			T* oldPtr = m_ptr;
-			m_ptr = val;
-			if(m_ptr)
-			{
-				m_ptr->addRef();
-			}
-			if(oldPtr)
-			{
-				oldPtr->release();
-			}
-		}
+    void operator=(const object_ptr<T>& val) {
+      T* oldPtr = m_ptr;
+      m_ptr = val.m_ptr;
+      if (m_ptr) {
+	m_ptr->addRef();
+      }
+      if (oldPtr) {
+	oldPtr->release();
+      }
+    }
 
-		T* operator->()
-		{
-			return m_ptr;
-		}
+    void operator=(T* val) {
+      T* oldPtr = m_ptr;
+      m_ptr = val;
+      if (m_ptr) {
+	m_ptr->addRef();
+      }
+      if (oldPtr) {
+	oldPtr->release();
+      }
+    }
 
-		const T* operator->() const
-		{
-			return m_ptr;
-		}
+    T* operator->() {
+      return m_ptr;
+    }
 
-		operator T*()
-		{
-			return m_ptr;
-		}
+    const T* operator->() const {
+      return m_ptr;
+    }
 
-		operator const T*() const
-		{
-			return m_ptr;
-		}
-	};
+    operator T*() {
+      return m_ptr;
+    }
+
+    operator const T*() const {
+      return m_ptr;
+    }
+  };
 }
+
+#endif /** _OBJECT_H_ */
