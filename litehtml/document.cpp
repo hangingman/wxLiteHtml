@@ -100,7 +100,7 @@ litehtml::uint_ptr litehtml::document::add_font(const wchar_t* name, int size,
      }
 
      wchar_t strSize[20];
-     _itow_s(size, strSize, 20, 10);
+     _itow(size, strSize, 20);
 
      std::wstring key = name;
      key += L":";
@@ -173,7 +173,7 @@ litehtml::uint_ptr litehtml::document::get_font(const wchar_t* name, int size,
      }
 
      wchar_t strSize[20];
-     _itow_s(size, strSize, 20, 10);
+     _itow(size, strSize, 20);
 
      std::wstring key = name;
      key += L":";
