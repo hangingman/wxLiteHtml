@@ -215,6 +215,7 @@ ToolbarWnd.cpp   downloader.cpp       litebrowser.cpp           memdc.cpp     \
 ToolbarWnd.h     downloader.h         memdc.h
 
 ACLOCAL_AMFLAGS = -I m4
+AM_CXXFLAGS = -I$(top_builddir)/litehtml -I$(top_builddir)/include -I$(top_builddir)/container
 litebrowser_LDADD = litebrowser_rc.o $(top_builddir)/litehtml/libwxlitehtml.la  $(top_builddir)/container/libwin32_container.la
 all: all-am
 

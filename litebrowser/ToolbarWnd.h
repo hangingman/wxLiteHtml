@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _TOOLBARWND_H_
+#define _TOOLBARWND_H_
+
 #include "gdiplus_container.h"
 
 #define TOOLBARWND_CLASS	L"TOOLBAR_WINDOW"
@@ -54,3 +56,5 @@ protected:
 private:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 };
+
+#endif /** _TOOLBARWND_H_ */

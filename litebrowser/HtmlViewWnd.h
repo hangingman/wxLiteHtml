@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _HTMLVIEWWND_H_
+#define _HTMLVIEWWND_H_
+
 #include "cairo_container.h"
 #include "gdiplus_container.h"
 #include "dib.h"
@@ -67,3 +69,5 @@ protected:
 private:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 };
+
+#endif /** _HTMLVIEWWND_H_ */

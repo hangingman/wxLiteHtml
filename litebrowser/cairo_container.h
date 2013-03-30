@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _CAIRO_CONTAINER_H_
+#define _CAIRO_CONTAINER_H_
+
 #include "dib.h"
 
 class cairo_dev
@@ -98,3 +100,5 @@ private:
 	void						clear_images();
 	void						add_path_arc(cairo_t* cr, double x, double y, double rx, double ry, double a1, double a2, bool neg);
 };
+
+#endif /** _CAIRO_CONTAINER_H_ */

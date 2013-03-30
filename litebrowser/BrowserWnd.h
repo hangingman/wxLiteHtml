@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _BROWSERWND_H_
+#define _BROWSERWND_H_
 
 #define BROWSERWND_CLASS	L"BROWSER_WINDOW"
 
@@ -33,3 +34,5 @@ protected:
 private:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 };
+
+#endif /** _BROWSERWND_H_ */

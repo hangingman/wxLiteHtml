@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _GLOBALS_H_
+#define _GLOBALS_H_
 
 #define ISOLATION_AWARE_ENABLED		1
 
@@ -13,7 +14,7 @@
 #include <commctrl.h>
 #include <gdiplus.h>
 #include <shlwapi.h>
-#include "..\include\litehtml.h"
+#include "litehtml.h"
 #include <Wininet.h>
 
 #define TLB_USE_TXDIB
@@ -21,4 +22,6 @@
 #define TLB_NO_TLBPDK
 #define TLB_USE_HTTPREADER
 
-#include <tlbpdklib.h>
+//#include <tlbpdklib.h>
+
+#endif /** _GLOBALS_H_ */
