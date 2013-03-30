@@ -150,11 +150,13 @@ litehtml::table_cell* litehtml::table_grid::cell(int t_col, int t_row) {
 }
 
 void litehtml::table_grid::distribute_max_width(int width, int start, int end) {
-     distribute_width(width, start, end, &table_column_accessor_max_width());
+     table_column_accessor_max_width table_column_accessor_max_width;
+     distribute_width(width, start, end, &table_column_accessor_max_width);
 }
 
 void litehtml::table_grid::distribute_min_width(int width, int start, int end) {
-     distribute_width(width, start, end, &table_column_accessor_min_width());
+     table_column_accessor_min_width table_column_accessor_min_width;
+     distribute_width(width, start, end, &table_column_accessor_min_width);
 }
 
 void litehtml::table_grid::distribute_width(int width, int start, int end,
