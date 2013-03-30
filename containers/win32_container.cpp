@@ -82,12 +82,16 @@ void litehtml::win32_container::draw_text( uint_ptr hdc, const wchar_t* text, ui
      HFONT oldFont = (HFONT) SelectObject((HDC) hdc, (HFONT) hFont);
 
      SetBkMode((HDC) hdc, TRANSPARENT);
-
      SetTextColor((HDC) hdc, RGB(color.red, color.green, color.blue));
-
      RECT rcText = { pos.left(), pos.top(), pos.right(), pos.bottom() };
-     DrawText((HDC) hdc, text, -1, &rcText, DT_SINGLELINE | DT_NOPREFIX | DT_BOTTOM | DT_NOCLIP);
 
+     // wchar_t* to LPCSTR
+     int len;
+     char mText[100];
+     len = wcstombs(mText, text, 100);
+     LPCSTR lpcText = mText;
+
+     DrawText((HDC) hdc, lpcText, -1, &rcText, DT_SINGLELINE | DT_NOPREFIX | DT_BOTTOM | DT_NOCLIP);
      SelectObject((HDC) hdc, oldFont);
 
      release_clip((HDC) hdc);
