@@ -16,7 +16,7 @@ namespace litehtml {
 
   typedef std::map<std::wstring, std::wstring> string_map;
   typedef std::map<std::wstring, uint_ptr> fonts_map;
-  typedef std::vector<litehtml::object_ptr<litehtml::element>> elements_vector;
+  typedef std::vector<litehtml::object_ptr<litehtml::element> > elements_vector;
   typedef std::vector<int> int_vector;
   typedef std::vector<std::wstring> string_vector;
 
