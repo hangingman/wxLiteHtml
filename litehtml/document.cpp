@@ -12,6 +12,11 @@
 #include "el_base.h"
 #include "el_anchor.h"
 #include "el_break.h"
+#include "el_body.h"
+#include "el_para.h"
+#include "el_image.h"
+#include "el_text.h"
+#include "el_space.h"
 #include <math.h>
 
 const wchar_t* g_empty_tags[] = { L"base", L"meta", L"link", L"br", L"hr",
