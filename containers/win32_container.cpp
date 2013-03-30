@@ -61,11 +61,15 @@ int litehtml::win32_container::line_height( uint_ptr hdc, uint_ptr hFont )
 int litehtml::win32_container::text_width( uint_ptr hdc, const wchar_t* text, uint_ptr hFont )
 {
      HFONT oldFont = (HFONT) SelectObject((HDC) hdc, (HFONT) hFont);
-
      SIZE sz = {0, 0};
 
-     GetTextExtentPoint32((HDC) hdc, text, lstrlen(text), &sz);
+     // wchar_t* to LPCSTR
+     int len;
+     char mText[100];
+     len = wcstombs(mText, text, 100);
+     LPCSTR lpcText = mText;
 
+     GetTextExtentPoint32((HDC) hdc, lpcText, len, &sz);
      SelectObject((HDC) hdc, oldFont);
 
      return (int) sz.cx;
