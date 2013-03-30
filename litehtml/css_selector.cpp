@@ -153,7 +153,8 @@ bool litehtml::css_selector::parse(const std::wstring& text) {
      }
 
      if (m_left) {
-	  delete m_left;
+	  // FIX ME
+	  delete &m_left;
      }
      m_left = 0;
 

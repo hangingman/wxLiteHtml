@@ -2,6 +2,7 @@
 #define _OBJECT_H_
 
 namespace litehtml {
+
   class object {
   protected:
     unsigned long volatile m_refCount;
