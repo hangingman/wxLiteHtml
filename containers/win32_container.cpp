@@ -24,7 +24,7 @@ litehtml::uint_ptr litehtml::win32_container::create_font( const wchar_t* faceNa
 
      LOGFONT lf;
      ZeroMemory(&lf, sizeof(lf));
-     wcscpy_s(lf.lfFaceName, LF_FACESIZE, fonts[0].c_str());
+     wcscpy(lf.lfFaceName, fonts[0].c_str());
 
      lf.lfHeight			= -size;
      lf.lfWeight			= weight;
