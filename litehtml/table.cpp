@@ -41,7 +41,7 @@ void litehtml::table_grid::finish() {
      m_rows_count = (int) m_cells.size();
      m_cols_count = 0;
      for (int i = 0; i < (int) m_cells.size(); i++) {
-	  m_cols_count = max(m_cols_count, (int) m_cells[i].size());
+	  m_cols_count = std::max(m_cols_count, (int) m_cells[i].size());
      }
      for (int i = 0; i < (int) m_cells.size(); i++) {
 	  for (int j = (int) m_cells[i].size(); j < m_cols_count; j++) {
@@ -334,7 +334,7 @@ int litehtml::table_grid::set_table_width(int new_width, int bs_x) {
 	  if (!m_columns[col].css_width.is_predefined()) {
 	       m_columns[col].width = m_columns[col].css_width.calc_percent(
 		    new_width - bs_x * (m_cols_count + 1));
-	       m_columns[col].width = max(m_columns[col].width,
+	       m_columns[col].width = std::max(m_columns[col].width,
 					  m_columns[col].min_width);
 	  }
 	  table_width += m_columns[col].width;
