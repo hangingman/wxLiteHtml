@@ -269,12 +269,12 @@ void litehtml::win32_container::draw_background( uint_ptr hdc, const wchar_t* im
 
 wchar_t litehtml::win32_container::toupper( const wchar_t c )
 {
-     return (wchar_t) CharUpper((LPWSTR) c);
+     return toupper(c);
 }
 
 wchar_t litehtml::win32_container::tolower( const wchar_t c )
 {
-     return (wchar_t) CharLower((LPWSTR) c);
+     return tolower(c);
 }
 
 void litehtml::win32_container::set_clip( const litehtml::position& pos, bool valid_x, bool valid_y )
