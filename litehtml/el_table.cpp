@@ -339,17 +339,19 @@ void litehtml::el_table::parse_styles(bool is_reparse) {
 }
 
 void litehtml::el_table::init() {
-     m_grid.clear();
 
-     elements_iterator row_iter(this, &go_inside_table(),
-				&table_rows_selector());
+     m_grid.clear();
+     go_inside_table go_inside_table;
+     table_rows_selector table_rows_selector;
+     table_cells_selector table_cells_selector;
+     
+     elements_iterator row_iter(this, &go_inside_table, &table_rows_selector);
 
      element* row = row_iter.next(false);
      while (row) {
 	  m_grid.begin_row();
 
-	  elements_iterator cell_iter(row, &go_inside_table(),
-				      &table_cells_selector());
+	  elements_iterator cell_iter(row, &go_inside_table, &table_cells_selector);
 	  element* cell = cell_iter.next();
 	  while (cell) {
 	       m_grid.add_cell(cell);
