@@ -99,72 +99,72 @@ void litehtml::css_element_selector::parse(const std::wstring& txt) {
 }
 
 bool litehtml::css_selector::parse(const std::wstring& text) {
-	if (text.empty()) {
-		return false;
-	}
-	string_vector tokens;
-	tokenize(text, tokens, L"", L" \t>+~");
+     if (text.empty()) {
+	  return false;
+     }
+     string_vector tokens;
+     tokenize(text, tokens, L"", L" \t>+~");
 
-	if (tokens.empty()) {
-		return false;
-	}
+     if (tokens.empty()) {
+	  return false;
+     }
 
-	std::wstring left;
-	std::wstring right = tokens.back();
-	wchar_t combinator = 0;
+     std::wstring left;
+     std::wstring right = tokens.back();
+     wchar_t combinator = 0;
 
-	tokens.pop_back();
-	while (!tokens.empty()
-			&& (tokens.back() == L" " || tokens.back() == L"\t"
-					|| tokens.back() == L"+" || tokens.back() == L"~"
-					|| tokens.back() == L">")) {
-		if (combinator == L' ' || combinator == 0) {
-			combinator = tokens.back()[0];
-		}
-		tokens.pop_back();
-	}
+     tokens.pop_back();
+     while (!tokens.empty()
+	    && (tokens.back() == L" " || tokens.back() == L"\t"
+		|| tokens.back() == L"+" || tokens.back() == L"~"
+		|| tokens.back() == L">")) {
+	  if (combinator == L' ' || combinator == 0) {
+	       combinator = tokens.back()[0];
+	  }
+	  tokens.pop_back();
+     }
 
-	for (string_vector::const_iterator i = tokens.begin(); i != tokens.end();
-			i++) {
-		left += *i;
-	}
+     for (string_vector::const_iterator i = tokens.begin(); i != tokens.end();
+	  i++) {
+	  left += *i;
+     }
 
-	trim(left);
-	trim(right);
+     trim(left);
+     trim(right);
 
-	if (right.empty()) {
-		return false;
-	}
+     if (right.empty()) {
+	  return false;
+     }
 
-	m_right.parse(right);
+     m_right.parse(right);
 
-	switch (combinator) {
-	case L'>':
-		m_combinator = combinator_child;
-		break;
-	case L'+':
-		m_combinator = combinator_adjacent_sibling;
-		break;
-	case L'~':
-		m_combinator = combinator_adjacent_sibling;
-		break;
-	default:
-		m_combinator = combinator_descendant;
-	}
+     switch (combinator) {
+     case L'>':
+	  m_combinator = combinator_child;
+	  break;
+     case L'+':
+	  m_combinator = combinator_adjacent_sibling;
+	  break;
+     case L'~':
+	  m_combinator = combinator_adjacent_sibling;
+	  break;
+     default:
+	  m_combinator = combinator_descendant;
+     }
 
-	if (m_left) {
-		delete m_left;
-	}
-	m_left = 0;
+     if (m_left) {
+	  delete m_left;
+     }
+     m_left = 0;
 
-	if (!left.empty()) {
-		m_left = new css_selector;
-		if (!m_left->parse(left)) {
-			return false;
-		}
-	}
+     if (!left.empty()) {
+	  m_left = new css_selector;
+	  if (!m_left->parse(left)) {
+	       return false;
+	  }
+     }
 
-	return true;
+     return true;
 }
 
 void litehtml::css_selector::calc_specificity() {

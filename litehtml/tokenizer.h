@@ -33,9 +33,6 @@ freely, subject to the following restrictions:
 				customizable way of breaking up strings.
 *********************************************************************/
 
-#ifndef __
-#define __
-
 #include <vector>
 #include <string>
 
