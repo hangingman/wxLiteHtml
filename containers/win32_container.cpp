@@ -24,14 +24,18 @@ litehtml::uint_ptr litehtml::win32_container::create_font( const wchar_t* faceNa
 
      LOGFONT lf;
      ZeroMemory(&lf, sizeof(lf));
-     wcscpy(lf.lfFaceName, fonts[0].c_str());
 
-     lf.lfHeight			= -size;
-     lf.lfWeight			= weight;
-     lf.lfItalic			= (italic == litehtml::fontStyleItalic) ? TRUE : FALSE;
+     // convert wchar_t
+     wchar_t *wc;
+     mbstowcs(wc, lf.lfFaceName, sizeof(lf.lfFaceName));
+     wcscpy(wc, fonts[0].c_str());
+
+     lf.lfHeight                = -size;
+     lf.lfWeight                = weight;
+     lf.lfItalic                = (italic == litehtml::fontStyleItalic) ? TRUE : FALSE;
      lf.lfCharSet		= DEFAULT_CHARSET;
-     lf.lfOutPrecision	= OUT_DEFAULT_PRECIS;
-     lf.lfClipPrecision	= CLIP_DEFAULT_PRECIS;
+     lf.lfOutPrecision	        = OUT_DEFAULT_PRECIS;
+     lf.lfClipPrecision	        = CLIP_DEFAULT_PRECIS;
      lf.lfQuality		= DEFAULT_QUALITY;
      lf.lfStrikeOut		= (decoration & litehtml::font_decoration_linethrough) ? TRUE : FALSE;
      lf.lfUnderline		= (decoration & litehtml::font_decoration_underline) ? TRUE : FALSE;
