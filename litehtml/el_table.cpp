@@ -59,9 +59,9 @@ int litehtml::el_table::render(int x, int y, int max_width) {
 	  m_grid.column(col).min_width = 0;
 	  for (int row = 0; row < m_grid.rows_count(); row++) {
 	       if (m_grid.cell(col, row)->colspan <= 1) {
-		    m_grid.column(col).max_width = max(m_grid.column(col).max_width,
+		    m_grid.column(col).max_width = std::max(m_grid.column(col).max_width,
 						       m_grid.cell(col, row)->max_width);
-		    m_grid.column(col).min_width = max(m_grid.column(col).min_width,
+		    m_grid.column(col).min_width = std::max(m_grid.column(col).min_width,
 						       m_grid.cell(col, row)->min_width);
 	       }
 	  }
@@ -114,7 +114,7 @@ int litehtml::el_table::render(int x, int y, int max_width) {
      int table_width = 0;
 
      if (!m_css_width.is_predefined()) {
-	  table_width = max(min_table_width, max_width);
+	  table_width = std::max(min_table_width, max_width);
 	  if (table_width > min_table_width) {
 	       for (int col2 = 0; col2 < m_grid.cols_count(); col2++) {
 		    m_grid.column(col2).width = m_grid.column(col2).min_width;
@@ -172,7 +172,7 @@ int litehtml::el_table::render(int x, int y, int max_width) {
 			 - cell->el->content_margins_left()
 			 - cell->el->content_margins_right();
 		    if (cell->rowspan <= 1) {
-			 max_height = max(max_height, cell->el->height());
+			 max_height = std::max(max_height, cell->el->height());
 		    } else {
 			 row_span_found = true;
 		    }
@@ -215,7 +215,7 @@ int litehtml::el_table::render(int x, int y, int max_width) {
 					- cell->el->content_margins_bottom();
 			      } else {
 				   m_grid.row(
-					min(row + cell->rowspan - 1,
+					std::min(row + cell->rowspan - 1,
 					    m_grid.rows_count() - 1)).height +=
 					cell->el->height() - cell_height;
 				   row_height_changed = true;

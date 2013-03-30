@@ -560,8 +560,8 @@ int litehtml::element::render(int x, int y, int max_width) {
 		   && m_lines.front()->collapse_top_margin()) {
 		    int add = m_lines.front()->get_margin_top();
 		    if (add) {
-			 m_margins.top = max(m_margins.top,
-					     m_lines.front()->get_margin_top());
+			 m_margins.top = std::max(m_margins.top,
+						  m_lines.front()->get_margin_top());
 			 for (line::vector::iterator ln = m_lines.begin();
 			      ln != m_lines.end(); ln++) {
 			      (*ln)->add_top(-add);
@@ -573,8 +573,8 @@ int litehtml::element::render(int x, int y, int max_width) {
 
 	       if (!m_padding.bottom && !m_borders.bottom
 		   && m_lines.back()->collapse_bottom_margin()) {
-		    m_margins.bottom = max(m_margins.bottom,
-					   m_lines.back()->get_margin_bottom());
+		    m_margins.bottom = std::max(m_margins.bottom,
+						m_lines.back()->get_margin_bottom());
 		    m_pos.height -= m_lines.back()->get_margin_bottom();
 	       }
 	  }
@@ -770,8 +770,8 @@ void litehtml::element::finish_line(int max_width) {
 
 	  if (prev_line && m_lines.back()->get_clear_floats() == clear_none) {
 	       top = prev_line->get_top() + prev_line->get_height()
-		    - min(m_lines.back()->get_margin_top(),
-			  prev_line->get_margin_bottom());
+		    - std::min(m_lines.back()->get_margin_top(),
+			       prev_line->get_margin_bottom());
 	  } else if (!prev_line && collapse_top_margin()) {
 	       if (m_lines.back()->get_margin_top() >= 0) {
 		    top -= m_lines.back()->get_margin_top();
@@ -1041,7 +1041,7 @@ int litehtml::element::get_floats_height() const {
 		    el_pos += el->m_padding;
 		    el_pos += el->m_borders;
 
-		    h = max(h, el_pos.bottom());
+		    h = std::max(h, el_pos.bottom());
 	       }
 	  }
 	  return h;
@@ -1064,7 +1064,7 @@ int litehtml::element::get_left_floats_height() const {
 			 el_pos += el->m_padding;
 			 el_pos += el->m_borders;
 
-			 h = max(h, el_pos.bottom());
+			 h = std::max(h, el_pos.bottom());
 		    }
 	       }
 	  }
@@ -1088,7 +1088,7 @@ int litehtml::element::get_right_floats_height() const {
 			 el_pos += el->m_padding;
 			 el_pos += el->m_borders;
 
-			 h = max(h, el_pos.bottom());
+			 h = std::max(h, el_pos.bottom());
 		    }
 	       }
 	  }
@@ -1112,7 +1112,7 @@ int litehtml::element::get_line_left(int y) const {
 		    el_pos += el->m_borders;
 
 		    if (y >= el_pos.top() && y < el_pos.bottom()) {
-			 w = max(w, el_pos.right());
+			 w = std::max(w, el_pos.right());
 		    }
 	       }
 	  }
@@ -1139,7 +1139,7 @@ int litehtml::element::get_line_right(int y, int def_right) const {
 		    el_pos += el->m_borders;
 
 		    if (y >= el_pos.top() && y < el_pos.bottom()) {
-			 w = min(w, el_pos.left());
+			 w = std::min(w, el_pos.left());
 		    }
 	       }
 	  }
@@ -1367,7 +1367,7 @@ int litehtml::element::margin_top() const {
      if (collapse_top_margin()) {
 	  line::ptr ln = first_line();
 	  if (ln && ln->get_margin_top() >= 0) {
-	       return max(m_margins.top, ln->get_margin_top());
+	       return std::max(m_margins.top, ln->get_margin_top());
 	  }
      }
      return m_margins.top;
@@ -1377,7 +1377,7 @@ int litehtml::element::margin_bottom() const {
      if (collapse_bottom_margin()) {
 	  line::ptr ln = last_line();
 	  if (ln && ln->get_margin_bottom() >= 0) {
-	       return max(m_margins.bottom, ln->get_margin_bottom());
+	       return std::max(m_margins.bottom, ln->get_margin_bottom());
 	  }
      }
      return m_margins.bottom;
@@ -1489,9 +1489,9 @@ void litehtml::element::get_inline_boxes(position::vector& boxes) {
 	       }
 	       pos.width = el->right() - pos.x - el->margin_right()
 		    - el->margin_left();
-	       pos.height = max(pos.height,
-				el->height() + m_padding.top + m_padding.bottom
-				+ m_borders.top + m_borders.bottom);
+	       pos.height = std::max(pos.height,
+				     el->height() + m_padding.top + m_padding.bottom
+				     + m_borders.top + m_borders.bottom);
 	  }
      }
      if (pos.width || pos.height) {
