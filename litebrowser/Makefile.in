@@ -53,9 +53,11 @@ am_litebrowser_OBJECTS = BrowserWnd.$(OBJEXT) \
 	HtmlViewWnd.$(OBJEXT) dib.$(OBJEXT) ToolbarWnd.$(OBJEXT) \
 	downloader.$(OBJEXT) litebrowser.$(OBJEXT) memdc.$(OBJEXT)
 litebrowser_OBJECTS = $(am_litebrowser_OBJECTS)
+am__DEPENDENCIES_1 =
 litebrowser_DEPENDENCIES = litebrowser_rc.o \
 	$(top_builddir)/litehtml/libwxlitehtml.la \
-	$(top_builddir)/container/libwin32_container.la
+	$(top_builddir)/container/libwin32_container.la \
+	$(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -143,6 +145,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PKG_CONFIG = @PKG_CONFIG@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -169,6 +172,8 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 builddir = @builddir@
+cairo_CFLAGS = @cairo_CFLAGS@
+cairo_LIBS = @cairo_LIBS@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
@@ -215,8 +220,8 @@ ToolbarWnd.cpp   downloader.cpp       litebrowser.cpp           memdc.cpp     \
 ToolbarWnd.h     downloader.h         memdc.h
 
 ACLOCAL_AMFLAGS = -I m4
-AM_CXXFLAGS = -I$(top_builddir)/litehtml -I$(top_builddir)/include -I$(top_builddir)/container
-litebrowser_LDADD = litebrowser_rc.o $(top_builddir)/litehtml/libwxlitehtml.la  $(top_builddir)/container/libwin32_container.la
+AM_CXXFLAGS = -I$(top_builddir)/litehtml -I$(top_builddir)/include -I$(top_builddir)/container $(cairo_CFLAGS)
+litebrowser_LDADD = litebrowser_rc.o $(top_builddir)/litehtml/libwxlitehtml.la  $(top_builddir)/container/libwin32_container.la $(cairo_LIBS)
 all: all-am
 
 .SUFFIXES:

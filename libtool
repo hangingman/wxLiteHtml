@@ -76,8 +76,8 @@ host=x86_64-w64-mingw32
 host_os=mingw32
 
 # The build system.
-build_alias=x86_64-w64-mingw32
-build=x86_64-w64-mingw32
+build_alias=
+build=i686-pc-mingw32
 build_os=mingw32
 
 # A sed program that does not truncate output.
@@ -96,7 +96,7 @@ EGREP="/usr/bin//grep -E"
 FGREP="/usr/bin//grep -F"
 
 # A BSD- or MS-compatible name lister.
-NM="/mingw/bin//nm"
+NM="nm"
 
 # Whether we need soft or hard links.
 LN_S="cp -p"
@@ -135,7 +135,7 @@ file_magic_cmd="func_win32_libid"
 file_magic_glob=""
 
 # Find potential files using nocaseglob when deplibs_check_method = "file_magic".
-want_nocaseglob="yes"
+want_nocaseglob="no"
 
 # Command to associate shared and link libraries.
 sharedlib_from_linklib_cmd="func_cygming_dll_for_implib"

@@ -28,6 +28,10 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_CHECK_FUNCS([select])
 
+# Checks for cairo
+PKG_PROG_PKG_CONFIG
+PKG_CHECK_MODULES(cairo,cairo)
+
 AC_CONFIG_FILES([Makefile
                  containers/Makefile
                  litehtml/Makefile
