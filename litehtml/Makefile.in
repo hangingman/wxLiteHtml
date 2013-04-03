@@ -168,12 +168,24 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+PLATFORM_STRING = @PLATFORM_STRING@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
+WX_CFLAGS = @WX_CFLAGS@
+WX_CFLAGS_ONLY = @WX_CFLAGS_ONLY@
+WX_CONFIG_PATH = @WX_CONFIG_PATH@
+WX_CPPFLAGS = @WX_CPPFLAGS@
+WX_CXXFLAGS = @WX_CXXFLAGS@
+WX_CXXFLAGS_ONLY = @WX_CXXFLAGS_ONLY@
+WX_LIBS = @WX_LIBS@
+WX_LIBS_STATIC = @WX_LIBS_STATIC@
+WX_RESCOMP = @WX_RESCOMP@
+WX_VERSION = @WX_VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -250,6 +262,7 @@ css_length.h    el_base.h         el_link.h       el_td.h       iterators.cpp  t
 css_margins.h   el_body.cpp       el_para.cpp     el_text.cpp   iterators.h    table.h
 
 libwxlitehtml_la_LDFLAGS = -no-undefined -version-info 1:0:0
+AM_CXXFLAGS = @WX_CXXFLAGS_ONLY@
 all: all-am
 
 .SUFFIXES:

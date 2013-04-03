@@ -68,13 +68,13 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libwin32container_la_DEPENDENCIES =  \
+libwxcontainer_la_DEPENDENCIES =  \
 	$(top_builddir)/litehtml/libwxlitehtml.la
-am_libwin32container_la_OBJECTS = win32_container.lo
-libwin32container_la_OBJECTS = $(am_libwin32container_la_OBJECTS)
-libwin32container_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+am_libwxcontainer_la_OBJECTS = wx_container.lo
+libwxcontainer_la_OBJECTS = $(am_libwxcontainer_la_OBJECTS)
+libwxcontainer_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(libwin32container_la_LDFLAGS) $(LDFLAGS) -o $@
+	$(CXXFLAGS) $(libwxcontainer_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -97,8 +97,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libwin32container_la_SOURCES)
-DIST_SOURCES = $(libwin32container_la_SOURCES)
+SOURCES = $(libwxcontainer_la_SOURCES)
+DIST_SOURCES = $(libwxcontainer_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -163,12 +163,24 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+PLATFORM_STRING = @PLATFORM_STRING@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
+WX_CFLAGS = @WX_CFLAGS@
+WX_CFLAGS_ONLY = @WX_CFLAGS_ONLY@
+WX_CONFIG_PATH = @WX_CONFIG_PATH@
+WX_CPPFLAGS = @WX_CPPFLAGS@
+WX_CXXFLAGS = @WX_CXXFLAGS@
+WX_CXXFLAGS_ONLY = @WX_CXXFLAGS_ONLY@
+WX_LIBS = @WX_LIBS@
+WX_LIBS_STATIC = @WX_LIBS_STATIC@
+WX_RESCOMP = @WX_RESCOMP@
+WX_VERSION = @WX_VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -229,13 +241,13 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
-# build libwxlitehtml
+# build libwin32container
 ACLOCAL_AMFLAGS = -I m4
-AM_CXXFLAGS = -I$(top_builddir)/litehtml -I$(top_builddir)/include
-lib_LTLIBRARIES = libwin32container.la
-libwin32container_la_SOURCES = win32_container.cpp win32_container.h
-libwin32container_la_LIBADD = $(top_builddir)/litehtml/libwxlitehtml.la
-libwin32container_la_LDFLAGS = -no-undefined -version-info 1:0:0 -lgdi32
+AM_CXXFLAGS = @WX_CXXFLAGS_ONLY@ -I$(top_builddir)/litehtml -I$(top_builddir)/include
+lib_LTLIBRARIES = libwxcontainer.la
+libwxcontainer_la_SOURCES = wx_container.cpp wx_container.h
+libwxcontainer_la_LIBADD = @WX_LIBS@ $(top_builddir)/litehtml/libwxlitehtml.la
+libwxcontainer_la_LDFLAGS = -no-undefined -version-info 1:0:0 -lgdi32
 all: all-am
 
 .SUFFIXES:
@@ -301,8 +313,8 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libwin32container.la: $(libwin32container_la_OBJECTS) $(libwin32container_la_DEPENDENCIES) 
-	$(libwin32container_la_LINK) -rpath $(libdir) $(libwin32container_la_OBJECTS) $(libwin32container_la_LIBADD) $(LIBS)
+libwxcontainer.la: $(libwxcontainer_la_OBJECTS) $(libwxcontainer_la_DEPENDENCIES) 
+	$(libwxcontainer_la_LINK) -rpath $(libdir) $(libwxcontainer_la_OBJECTS) $(libwxcontainer_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -310,7 +322,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/win32_container.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wx_container.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

@@ -9,7 +9,7 @@ ToolbarWnd.h     downloader.h         memdc.h
 
 ACLOCAL_AMFLAGS		= -I m4
 AM_CXXFLAGS		= -I$(top_builddir)/litehtml -I$(top_builddir)/include -I$(top_builddir)/container $(cairo_CFLAGS)
-litebrowser_LDADD	= litebrowser_rc.o $(top_builddir)/litehtml/libwxlitehtml.la  $(top_builddir)/container/libwin32_container.la $(cairo_LIBS)
+litebrowser_LDADD	= litebrowser_rc.o $(top_builddir)/litehtml/libwxlitehtml.la  $(top_builddir)/container/wx_container.la $(cairo_LIBS)
 
 litebrowser_rc.o : $(top_builddir)/libtebrowser/litebrowser.rc
 	@WX_RESCOMP@ -i $^ -O coff -o $@

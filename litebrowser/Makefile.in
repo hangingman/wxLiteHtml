@@ -56,7 +56,7 @@ litebrowser_OBJECTS = $(am_litebrowser_OBJECTS)
 am__DEPENDENCIES_1 =
 litebrowser_DEPENDENCIES = litebrowser_rc.o \
 	$(top_builddir)/litehtml/libwxlitehtml.la \
-	$(top_builddir)/container/libwin32_container.la \
+	$(top_builddir)/container/wx_container.la \
 	$(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -146,12 +146,24 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+PLATFORM_STRING = @PLATFORM_STRING@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
+WX_CFLAGS = @WX_CFLAGS@
+WX_CFLAGS_ONLY = @WX_CFLAGS_ONLY@
+WX_CONFIG_PATH = @WX_CONFIG_PATH@
+WX_CPPFLAGS = @WX_CPPFLAGS@
+WX_CXXFLAGS = @WX_CXXFLAGS@
+WX_CXXFLAGS_ONLY = @WX_CXXFLAGS_ONLY@
+WX_LIBS = @WX_LIBS@
+WX_LIBS_STATIC = @WX_LIBS_STATIC@
+WX_RESCOMP = @WX_RESCOMP@
+WX_VERSION = @WX_VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -221,7 +233,7 @@ ToolbarWnd.h     downloader.h         memdc.h
 
 ACLOCAL_AMFLAGS = -I m4
 AM_CXXFLAGS = -I$(top_builddir)/litehtml -I$(top_builddir)/include -I$(top_builddir)/container $(cairo_CFLAGS)
-litebrowser_LDADD = litebrowser_rc.o $(top_builddir)/litehtml/libwxlitehtml.la  $(top_builddir)/container/libwin32_container.la $(cairo_LIBS)
+litebrowser_LDADD = litebrowser_rc.o $(top_builddir)/litehtml/libwxlitehtml.la  $(top_builddir)/container/wx_container.la $(cairo_LIBS)
 all: all-am
 
 .SUFFIXES:

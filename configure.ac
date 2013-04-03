@@ -5,7 +5,7 @@ AC_PREREQ([2.68])
 AC_INIT([libwxlitehtml], [1.0.0], [newserver002@gmail.com])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE()
-AC_CONFIG_SRCDIR([containers/win32_container.cpp])
+AC_CONFIG_SRCDIR([containers/wx_container.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -15,7 +15,56 @@ AC_PROG_CC
 AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 
-# Checks for libraries.
+# Checks for HostOS
+case "$host" in
+        *-*-mingw*|*-*-cygwin*)
+                AC_DEFINE(PLATFORM_WIN32, 1, [Platform is Win32])
+                PLATFORM_STRING="Win32"
+		AC_SUBST(PLATFORM_STRING)
+                ;;
+        *-*-linux*)
+                AC_DEFINE(PLATFORM_LINUX, 1, [Platform is Linux])
+                PLATFORM_STRING="Linux"
+		AC_SUBST(PLATFORM_STRING)
+                ;;
+        *-*-darwin*)
+                AC_DEFINE(PLATFORM_APPLE, 1, [Platform is Apple])
+                PLATFORM_STRING="Apple"
+		AC_SUBST(PLATFORM_STRING)
+                ;;
+        *)
+                AC_MSG_WARN([*** Please add $host to configure.ac checks!])
+                ;;
+esac
+
+# Check for windres
+if test "$PLATFORM_STRING" = "Win32"; then
+   AC_CHECK_TARGET_TOOL([WINDRES], [windres], [no])
+   if test "x$WINDRES" = "xno"; then
+      AC_MSG_ERROR([Cannot find windres])
+   fi
+   AC_SUBST(WINDRES)
+   AM_CONDITIONAL(USE_WINDRES, true)
+else
+# Set false use_windres
+AM_CONDITIONAL(USE_WINDRES, false)
+fi
+
+# Checks for wxWidgets.
+AM_OPTIONS_WXCONFIG
+reqwx=2.8.0
+AM_PATH_WXCONFIG($reqwx, wxWin=1)
+if test "$wxWin" != 1; then
+	AC_MSG_ERROR([
+		wxWidgets must be installed on your system.
+ 
+		Please check that wx-config is in path, the directory
+		where wxWidgets libraries are installed (returned by
+		'wx-config --libs' or 'wx-config --static --libs' command)
+		is in LD_LIBRARY_PATH or equivalent variable and
+		wxWidgets version is $reqwx or above.
+		])
+fi
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h])
