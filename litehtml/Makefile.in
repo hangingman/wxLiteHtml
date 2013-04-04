@@ -68,7 +68,7 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libwxlitehtml_la_LIBADD =
+libwxlitehtml_la_DEPENDENCIES =
 am_libwxlitehtml_la_OBJECTS = line.lo tokenizer.lo css_selector.lo \
 	el_break.lo el_space.lo el_title.lo background.lo document.lo \
 	el_comment.lo el_style.lo element.lo web_color.lo style.lo \
@@ -262,6 +262,7 @@ css_length.h    el_base.h         el_link.h       el_td.h       iterators.cpp  t
 css_margins.h   el_body.cpp       el_para.cpp     el_text.cpp   iterators.h    table.h
 
 libwxlitehtml_la_LDFLAGS = -no-undefined -version-info 1:0:0
+libwxlitehtml_la_LIBADD = @WX_LIBS@
 AM_CXXFLAGS = @WX_CXXFLAGS_ONLY@
 all: all-am
 

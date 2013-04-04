@@ -15,5 +15,6 @@ css_length.h    el_base.h         el_link.h       el_td.h       iterators.cpp  t
 css_margins.h   el_body.cpp       el_para.cpp     el_text.cpp   iterators.h    table.h
 
 libwxlitehtml_la_LDFLAGS = -no-undefined -version-info 1:0:0
+libwxlitehtml_la_LIBADD  = @WX_LIBS@
 
 AM_CXXFLAGS	= @WX_CXXFLAGS_ONLY@

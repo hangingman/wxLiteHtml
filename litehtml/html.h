@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include <vector>
 #include <map>
-#include <Windows.h>
+#include <wx/wx.h>
 #include "types.h"
 #include "background.h"
 #include "borders.h"
