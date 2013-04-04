@@ -1,6 +1,11 @@
 #ifndef _DOWNLOADER_H_
 #define _DOWNLOADER_H_
 
+#include "globals.h"
+#include <strsafe.h>
+#include <shlwapi.h>
+#include <Mlang.h>
+
 class CRemotedFile
 {
   WCHAR	m_tmpFile[MAX_PATH];

@@ -5,23 +5,24 @@
 
 #define GDIPVER	0x0110
 
-#include "targetver.h"
-#include <windows.h>
+#include <wx/wx.h>
+
+#ifdef __WXMSW__
+  #include <commctrl.h>
+  #include <gdiplus.h>
+  #include <shlwapi.h>
+  #include <Wininet.h>
+#endif
+
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-#include <commctrl.h>
-#include <gdiplus.h>
-#include <shlwapi.h>
 #include "litehtml.h"
-#include <Wininet.h>
 
 #define TLB_USE_TXDIB
 #define TLB_USE_CAIRO
 #define TLB_NO_TLBPDK
 #define TLB_USE_HTTPREADER
-
-//#include <tlbpdklib.h>
 
 #endif /** _GLOBALS_H_ */

@@ -1,9 +1,9 @@
 #ifndef _GDIPLUS_CONTAINER_H_
 #define _GDIPLUS_CONTAINER_H_
 
-#include "containers/win32_container.h"
+#include "containers/wx_container.h"
 
-class gdiplus_container : public litehtml::win32_container
+class gdiplus_container : public litehtml::wx_container
 {
  public:
   gdiplus_container(void);

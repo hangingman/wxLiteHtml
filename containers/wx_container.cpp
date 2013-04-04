@@ -26,9 +26,10 @@ litehtml::uint_ptr litehtml::wx_container::create_font( const wchar_t* faceName,
      ZeroMemory(&lf, sizeof(lf));
 
      // convert wchar_t
-     wchar_t *wc;
-     mbstowcs(wc, lf.lfFaceName, sizeof(lf.lfFaceName));
-     wcscpy(wc, fonts[0].c_str());
+     //wchar_t *wc;
+     //mbstowcs(wc, lf.lfFaceName, sizeof(lf.lfFaceName));
+     //wcscpy(wc, fonts[0].c_str());
+     wcscpy(lf.lfFaceName, fonts[0].c_str());
 
      lf.lfHeight                = -size;
      lf.lfWeight                = weight;
@@ -64,12 +65,12 @@ int litehtml::wx_container::text_width( uint_ptr hdc, const wchar_t* text, uint_
      SIZE sz = {0, 0};
 
      // wchar_t* to LPCSTR
-     int len;
-     char mText[100];
-     len = wcstombs(mText, text, 100);
-     LPCSTR lpcText = mText;
-
-     GetTextExtentPoint32((HDC) hdc, lpcText, len, &sz);
+     // int len;
+     // char mText[100];
+     // len = wcstombs(mText, text, 100);
+     // LPCSTR lpcText = mText;
+     //GetTextExtentPoint32((HDC) hdc, text, len, &sz);
+     GetTextExtentPoint32((HDC) hdc, text, lstrlen(text), &sz);
      SelectObject((HDC) hdc, oldFont);
 
      return (int) sz.cx;
@@ -86,12 +87,12 @@ void litehtml::wx_container::draw_text( uint_ptr hdc, const wchar_t* text, uint_
      RECT rcText = { pos.left(), pos.top(), pos.right(), pos.bottom() };
 
      // wchar_t* to LPCSTR
-     int len;
-     char mText[100];
-     len = wcstombs(mText, text, 100);
-     LPCSTR lpcText = mText;
-
-     DrawText((HDC) hdc, lpcText, -1, &rcText, DT_SINGLELINE | DT_NOPREFIX | DT_BOTTOM | DT_NOCLIP);
+     // int len;
+     // char mText[100];
+     // len = wcstombs(mText, text, 100);
+     // LPCSTR lpcText = mText;
+     // DrawText((HDC) hdc, lpcText, -1, &rcText, DT_SINGLELINE | DT_NOPREFIX | DT_BOTTOM | DT_NOCLIP);
+     DrawText((HDC) hdc, text, -1, &rcText, DT_SINGLELINE | DT_NOPREFIX | DT_BOTTOM | DT_NOCLIP);
      SelectObject((HDC) hdc, oldFont);
 
      release_clip((HDC) hdc);

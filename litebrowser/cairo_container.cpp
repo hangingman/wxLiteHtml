@@ -4,17 +4,14 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-cairo_container::cairo_container(void)
-{
+cairo_container::cairo_container(void) {
 }
 
-cairo_container::~cairo_container(void)
-{
+cairo_container::~cairo_container(void) {
      clear_images();
 }
 
-litehtml::uint_ptr cairo_container::create_font( const wchar_t* faceName, int size, int weight, litehtml::font_style italic, unsigned int decoration )
-{
+litehtml::uint_ptr cairo_container::create_font( const wchar_t* faceName, int size, int weight, litehtml::font_style italic, unsigned int decoration ) {
      litehtml::string_vector fonts;
      tokenize(faceName, fonts, L",");
      litehtml::trim(fonts[0]);
@@ -29,20 +26,16 @@ litehtml::uint_ptr cairo_container::create_font( const wchar_t* faceName, int si
      return (litehtml::uint_ptr) fnt;
 }
 
-void cairo_container::delete_font( litehtml::uint_ptr hFont )
-{
+void cairo_container::delete_font( litehtml::uint_ptr hFont ) {
      cairo_fnt* fnt = (cairo_fnt*) hFont;
-     if(fnt)
-     {
+     if(fnt) {
 	  delete fnt;
      }
 }
 
-int cairo_container::line_height( litehtml::uint_ptr hdc, litehtml::uint_ptr hFont )
-{
+int cairo_container::line_height( litehtml::uint_ptr hdc, litehtml::uint_ptr hFont ) {
      cairo_fnt* fnt = (cairo_fnt*) hFont;
      cairo_dev cr(get_dib(hdc));
-	
      cairo_set_font_face(cr, fnt->fnt());
      cairo_set_font_size(cr, fnt->size());
      cairo_font_extents_t ext;
@@ -51,8 +44,7 @@ int cairo_container::line_height( litehtml::uint_ptr hdc, litehtml::uint_ptr hFo
      return (int) ext.height;
 }
 
-int cairo_container::text_width( litehtml::uint_ptr hdc, const wchar_t* text, litehtml::uint_ptr hFont )
-{
+int cairo_container::text_width( litehtml::uint_ptr hdc, const wchar_t* text, litehtml::uint_ptr hFont ) {
      cairo_fnt* fnt = (cairo_fnt*) hFont;
      cairo_dev cr(get_dib(hdc));
 
@@ -226,7 +218,7 @@ void cairo_container::load_image( const wchar_t* src, const wchar_t* baseurl )
      make_url(src, baseurl, url);
      if(m_images.find(url.c_str()) == m_images.end())
      {
-	  CTxDIB* img = get_image(url.c_str());
+	  wxCTxDIB* img = get_image(url.c_str());
 	  if(img)
 	  { 
 	       m_images[url.c_str()] = img;
@@ -275,7 +267,7 @@ void cairo_container::draw_background( litehtml::uint_ptr hdc, const wchar_t* im
      images_map::iterator img_i = m_images.find(url.c_str());
      if(img_i != m_images.end())
      {
-	  CTxDIB* bgbmp = img_i->second;
+	  wxCTxDIB* bgbmp = img_i->second;
 		
 	  litehtml::size img_sz;
 	  img_sz.width	= bgbmp->getWidth();
@@ -653,14 +645,12 @@ void cairo_container::draw_borders( litehtml::uint_ptr hdc, const litehtml::css_
      }
 }
 
-wchar_t cairo_container::toupper( const wchar_t c )
-{
-     return (wchar_t) CharUpper((LPWSTR) c);
+wchar_t cairo_container::toupper( const wchar_t c ) {
+     return toupper(c);
 }
 
-wchar_t cairo_container::tolower( const wchar_t c )
-{
-     return (wchar_t) CharLower((LPWSTR) c);
+wchar_t cairo_container::tolower( const wchar_t c ) {
+     return tolower(c);
 }
 
 void cairo_container::set_clip( const litehtml::position& pos, bool valid_x, bool valid_y )
@@ -747,8 +737,7 @@ void cairo_container::clear_images()
 
 //////////////////////////////////////////////////////////////////////////
 
-cairo_dev::cairo_dev( simpledib::dib* dib )
-{
+cairo_dev::cairo_dev( simpledib::dib* dib ) {
      m_surface	= cairo_image_surface_create_for_data((unsigned char*) dib->bits(), CAIRO_FORMAT_ARGB32, dib->width(), dib->height(), dib->width() * 4);
      m_cr		= cairo_create(m_surface);
 
@@ -760,22 +749,17 @@ cairo_dev::cairo_dev( simpledib::dib* dib )
      }
 }
 
-cairo_dev::~cairo_dev()
-{
+cairo_dev::~cairo_dev() {
      cairo_destroy(m_cr);
      cairo_surface_destroy(m_surface);
 }
 
-void cairo_dev::draw_image( CTxDIB* bmp, int x, int y, int cx, int cy )
-{
+void cairo_dev::draw_image( wxCTxDIB* bmp, int x, int y, int cx, int cy ) {
      cairo_save(m_cr);
-
      cairo_matrix_t flib_m;
      cairo_matrix_init(&flib_m, 1, 0, 0, -1, 0, 0);
-
      cairo_surface_t* img = NULL;
-
-     CTxDIB rbmp;
+     wxCTxDIB rbmp;
 
      if(cx != bmp->getWidth() || cy != bmp->getHeight())
      {
@@ -799,15 +783,14 @@ void cairo_dev::draw_image( CTxDIB* bmp, int x, int y, int cx, int cy )
 
 //////////////////////////////////////////////////////////////////////////
 
-cairo_fnt::cairo_fnt( LPCWSTR facename, int size, int weight, BOOL italic, BOOL strikeout, BOOL underline )
-{
+cairo_fnt::cairo_fnt( LPCWSTR facename, int size, int weight, BOOL italic, BOOL strikeout, BOOL underline ) {
      m_bStrikeOut	= strikeout;
      m_bUnderline	= underline;
      m_size			= size;
 
      LOGFONT lf;
      ZeroMemory(&lf, sizeof(lf));
-     wcscpy_s(lf.lfFaceName, LF_FACESIZE, facename);
+     wcscpy(lf.lfFaceName, facename);
 
      lf.lfHeight			= 100;
      lf.lfWeight			= weight;

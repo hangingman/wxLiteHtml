@@ -51,12 +51,12 @@ PROGRAMS = $(bin_PROGRAMS)
 am_litebrowser_OBJECTS = BrowserWnd.$(OBJEXT) \
 	cairo_container.$(OBJEXT) gdiplus_container.$(OBJEXT) \
 	HtmlViewWnd.$(OBJEXT) dib.$(OBJEXT) ToolbarWnd.$(OBJEXT) \
-	downloader.$(OBJEXT) litebrowser.$(OBJEXT) memdc.$(OBJEXT)
+	downloader.$(OBJEXT) litebrowser.$(OBJEXT) memdc.$(OBJEXT) \
+	wxTxDIB.$(OBJEXT)
 litebrowser_OBJECTS = $(am_litebrowser_OBJECTS)
 am__DEPENDENCIES_1 =
-litebrowser_DEPENDENCIES = litebrowser_rc.o \
-	$(top_builddir)/litehtml/libwxlitehtml.la \
-	$(top_builddir)/container/wx_container.la \
+litebrowser_DEPENDENCIES = $(top_builddir)/litehtml/libwxlitehtml.la \
+	$(top_builddir)/containers/libwxcontainer.la \
 	$(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -225,15 +225,16 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 litebrowser_SOURCES = \
 BrowserWnd.cpp   cairo_container.cpp  gdiplus_container.cpp     litebrowser.h \
-BrowserWnd.h     cairo_container.h    gdiplus_container.h       resource.h    \
+BrowserWnd.h     cairo_container.h    gdiplus_container.h       			  \
 HtmlViewWnd.cpp  dib.cpp              globals.h                 targetver.h   \
 HtmlViewWnd.h    dib.h                                                        \
 ToolbarWnd.cpp   downloader.cpp       litebrowser.cpp           memdc.cpp     \
-ToolbarWnd.h     downloader.h         memdc.h
+ToolbarWnd.h     downloader.h         memdc.h			        wxTxDIB.cpp   \
+wxTxDIB.h
 
 ACLOCAL_AMFLAGS = -I m4
-AM_CXXFLAGS = -I$(top_builddir)/litehtml -I$(top_builddir)/include -I$(top_builddir)/container $(cairo_CFLAGS)
-litebrowser_LDADD = litebrowser_rc.o $(top_builddir)/litehtml/libwxlitehtml.la  $(top_builddir)/container/wx_container.la $(cairo_LIBS)
+AM_CXXFLAGS = @WX_CXXFLAGS_ONLY@ -I$(top_builddir)/litehtml -I$(top_builddir)/include -I$(top_builddir)/containers $(cairo_CFLAGS) -DNO_TOOLBAR
+litebrowser_LDADD = @WX_LIBS@ $(top_builddir)/litehtml/libwxlitehtml.la  $(top_builddir)/containers/libwxcontainer.la $(cairo_LIBS)
 all: all-am
 
 .SUFFIXES:
@@ -330,6 +331,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdiplus_container.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/litebrowser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memdc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wxTxDIB.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -559,8 +561,8 @@ uninstall-am: uninstall-binPROGRAMS
 	uninstall-binPROGRAMS
 
 
-litebrowser_rc.o : $(top_builddir)/libtebrowser/litebrowser.rc
-	@WX_RESCOMP@ -i $^ -O coff -o $@
+#litebrowser_rc.o : $(top_builddir)/libtebrowser/litebrowser.rc
+#	@WX_RESCOMP@ -i $^ -O coff -o $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

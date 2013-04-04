@@ -57,14 +57,14 @@ protected:
 	virtual void		OnLButtonUp(int x, int y);
 	virtual void		OnMouseLeave();
 	
-	void				render();
-	void				redraw(LPRECT rcDraw, BOOL update);
-	void				update_scroll();
-	void				update_cursor();
+	void			render();
+	void			redraw(LPRECT rcDraw, BOOL update);
+	void			update_scroll();
+	void			update_cursor();
 	
 	virtual void		make_url(LPCWSTR url, LPCWSTR basepath, std::wstring& out);
-	virtual CTxDIB*		get_image(LPCWSTR url);
-	void				get_client_rect(litehtml::position& client);
+	virtual wxCTxDIB*	get_image(LPCWSTR url);
+	void			get_client_rect(litehtml::position& client);
 
 private:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);

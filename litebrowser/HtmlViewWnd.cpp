@@ -469,94 +469,42 @@ void CHTMLViewWnd::OnMouseMove( int x, int y )
 	}
 }
 
-CTxDIB* CHTMLViewWnd::get_image( LPCWSTR url )
-{
-	CTxDIB* img = NULL;
+wxCTxDIB* CHTMLViewWnd::get_image( LPCWSTR url ) {
 
-	CRemotedFile rf;
+     wxCTxDIB* img = NULL;
+     CRemotedFile rf;
 
-	HANDLE hFile = rf.Open(url);
-	if(hFile != INVALID_HANDLE_VALUE)
-	{
-		DWORD szHigh;
-		DWORD szLow = GetFileSize(hFile, &szHigh);
-		HANDLE hMapping = CreateFileMapping(hFile, NULL, PAGE_READONLY, szHigh, szLow, NULL);
-		if(hMapping)
-		{
-			SIZE_T memSize;
-			if(szHigh)
-			{
-				memSize = MAXDWORD;
-			} else
-			{
-				memSize = szLow;
-			}
-			LPVOID data = MapViewOfFile(hMapping, FILE_MAP_READ, 0, 0, memSize);
+     HANDLE hFile = rf.Open(url);
+     if(hFile != INVALID_HANDLE_VALUE)
+     {
+	  DWORD szHigh;
+	  DWORD szLow = GetFileSize(hFile, &szHigh);
+	  HANDLE hMapping = CreateFileMapping(hFile, NULL, PAGE_READONLY, szHigh, szLow, NULL);
+	  if(hMapping)
+	  {
+	       SIZE_T memSize;
+	       if(szHigh)
+	       {
+		    memSize = MAXDWORD;
+	       } else
+	       {
+		    memSize = szLow;
+	       }
+	       LPVOID data = MapViewOfFile(hMapping, FILE_MAP_READ, 0, 0, memSize);
 
-			img = new CTxDIB;
-			if(!img->load((LPBYTE) data, (DWORD) memSize))
-			{
-				delete img;
-				img = NULL;
-			}
+	       img = new wxCTxDIB;
+	       if(!img->load((LPBYTE) data, (DWORD) memSize))
+	       {
+		    delete img;
+		    img = NULL;
+	       }
 
-			UnmapViewOfFile(data);
-			CloseHandle(hMapping);
-		}
-	}
+	       UnmapViewOfFile(data);
+	       CloseHandle(hMapping);
+	  }
+     }
 
-	return img;
-
-/*
-	Gdiplus::Bitmap* img = NULL;
-
-	CRemotedFile rf;
-
-	HANDLE hFile = rf.Open(url);
-	if(hFile != INVALID_HANDLE_VALUE)
-	{
-		DWORD szHigh;
-		DWORD szLow = GetFileSize(hFile, &szHigh);
-		HANDLE hMapping = CreateFileMapping(hFile, NULL, PAGE_READONLY, szHigh, szLow, NULL);
-		if(hMapping)
-		{
-			SIZE_T memSize;
-			if(szHigh)
-			{
-				memSize = MAXDWORD;
-			} else
-			{
-				memSize = szLow;
-			}
-			LPVOID data = MapViewOfFile(hMapping, FILE_MAP_READ, 0, 0, memSize);
-
-			HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, memSize);
-			LPVOID hgData = GlobalLock(hGlobal);
-			CopyMemory(hgData, data, memSize);
-			GlobalUnlock(hGlobal);
-
-			UnmapViewOfFile(data);
-			CloseHandle(hMapping);
-
-			IStream* pStream = NULL;
-			if (::CreateStreamOnHGlobal(hGlobal, TRUE, &pStream) == S_OK)
-			{
-				img = Gdiplus::Bitmap::FromStream(pStream);
-				pStream->Release();
-				if(img)
-				{ 
-					if (img->GetLastStatus() != Gdiplus::Ok)
-					{
-						delete img;
-						img = NULL;
-					}
-				}
-			}
-		}
-	}
-
-	return (uint_ptr) img;
-*/
+     return img;
 }
 
 void CHTMLViewWnd::on_anchor_click( const wchar_t* url, litehtml::element::ptr el )
