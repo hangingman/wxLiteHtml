@@ -11,7 +11,13 @@
 #include <math.h>
 #include <vector>
 #include <memory>
+#include <emmintrin.h>
+#include <mmintrin.h>
 #include <wx/wx.h>
+
+#ifdef __WXMSW__
+   #include <uxtheme.h>
+#endif
 
 #define JPEG_QUALITY_SUPER		0
 #define JPEG_QUALITY_GOOD		1
@@ -110,7 +116,7 @@ class wxCTxSkinDIB {
   wxCTxDIB	m_dibBottom;
   wxCTxDIB	m_dibRightBottom;
 
-  //MARGINS	m_margins;
+  MARGINS	m_margins;
   BOOL	        m_tileX;
   BOOL	        m_tileY;
 
@@ -118,8 +124,8 @@ class wxCTxSkinDIB {
   wxCTxSkinDIB();
   virtual ~wxCTxSkinDIB();
 
-  //BOOL load(LPCWSTR fileName, MARGINS* mg, BOOL tileX, BOOL tileY);
-  //BOOL load(wxCTxDIB* dib, MARGINS* mg, BOOL tileX, BOOL tileY);
+  BOOL load(LPCWSTR fileName, MARGINS* mg, BOOL tileX, BOOL tileY);
+  BOOL load(wxCTxDIB* dib, MARGINS* mg, BOOL tileX, BOOL tileY);
 
   void draw(HDC hdc, LPRECT rcDraw, LPRECT rcClip);
 };
