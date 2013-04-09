@@ -223,7 +223,7 @@ const wchar_t* litehtml::element::get_style_property(const wchar_t* name,
      const wchar_t* ret = m_style.get_property(name);
      bool pass_parent = false;
      if (m_parent) {
-	  if (ret && !_wcsicmp(ret, L"inherit")) {
+	  if (ret && !wcscmp(ret, L"inherit")) {
 	       pass_parent = true;
 	  } else if (!ret && inherited) {
 	       pass_parent = true;

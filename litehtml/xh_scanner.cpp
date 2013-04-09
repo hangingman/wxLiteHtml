@@ -1,6 +1,7 @@
 #include "xh_scanner.h"
 #include "string.h"
 #include <ctype.h>
+#include <wchar.h>
 
 namespace litehtml {
 
@@ -100,7 +101,7 @@ namespace litehtml {
 
 	  if (c == '>') {
 	       if (tag_name_length == 6
-		   && !_wcsnicmp(tag_name, L"script", tag_name_length)) {
+		   && !wcsncasecmp(tag_name, L"script", tag_name_length)) {
 		    c_scan = &scanner::scan_raw_body;
 		    return scan_raw_body();
 	       } else {
@@ -596,13 +597,13 @@ namespace litehtml {
 		    return (wchar) wcstol(buf + 2, &end, 16);
 	       } else
 	       {
-		    return (wchar) _wtoi(buf + 1);
+		    return (wchar) wcstol(buf + 1, NULL, 10);
 	       }
 	  } else
 	  {
 	       for(int i=0; g_HTMLCodes[i].szCode[0]; i++)
 	       {
-		    if(!_wcsnicmp(g_HTMLCodes[i].szCode + 1, buf, buf_size))
+		    if(!wcsncasecmp(g_HTMLCodes[i].szCode + 1, buf, buf_size))
 		    {
 			 return g_HTMLCodes[i].Code;
 		    }
@@ -625,7 +626,7 @@ namespace litehtml {
 	       if( c == 0) return TT_EOF;
 	       value[value_length] = c;
 
-	       if(value_length >= 8 && !_wcsnicmp(value + value_length - 8, L"</script>", 9))
+	       if(value_length >= 8 && !wcsncasecmp(value + value_length - 8, L"</script>", 9))
 	       {
 		    got_tail = true;
 		    value_length -= 8;

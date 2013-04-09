@@ -96,7 +96,7 @@ litehtml::uint_ptr litehtml::document::add_font(const wchar_t* name, int size,
 						const wchar_t* decoration) {
      uint_ptr ret = 0;
 
-     if (!name || name && !_wcsicmp(name, L"inherit")) {
+     if (!name || name && !wcscmp(name, L"inherit")) {
 	  name = m_font_name.c_str();
      }
 
@@ -104,8 +104,9 @@ litehtml::uint_ptr litehtml::document::add_font(const wchar_t* name, int size,
 	  size = container()->get_default_font_size();
      }
 
+     // convert integer to wchar_t crossplatform way
      wchar_t strSize[20];
-     _itow(size, strSize, 20);
+     swprintf(strSize, sizeof(strSize) / sizeof(*strSize), L"%d", size);
 
      std::wstring key = name;
      key += L":";
@@ -137,7 +138,7 @@ litehtml::uint_ptr litehtml::document::add_font(const wchar_t* name, int size,
 		    break;
 	       }
 	  } else {
-	       fw = _wtoi(weight);
+	       fw = (int) wcstol(weight, NULL, 10);
 	       if (fw < 100) {
 		    fw = FW_NORMAL;
 	       }
@@ -150,11 +151,11 @@ litehtml::uint_ptr litehtml::document::add_font(const wchar_t* name, int size,
 	       tokenize(decoration, tokens, L" ");
 	       for (std::vector<std::wstring>::iterator i = tokens.begin();
 		    i != tokens.end(); i++) {
-		    if (!_wcsicmp(i->c_str(), L"underline")) {
+		    if (!wcscmp(i->c_str(), L"underline")) {
 			 decor |= font_decoration_underline;
-		    } else if (!_wcsicmp(i->c_str(), L"line-through")) {
+		    } else if (!wcscmp(i->c_str(), L"line-through")) {
 			 decor |= font_decoration_linethrough;
-		    } else if (!_wcsicmp(i->c_str(), L"overline")) {
+		    } else if (!wcscmp(i->c_str(), L"overline")) {
 			 decor |= font_decoration_overline;
 		    }
 	       }
@@ -169,7 +170,7 @@ litehtml::uint_ptr litehtml::document::add_font(const wchar_t* name, int size,
 litehtml::uint_ptr litehtml::document::get_font(const wchar_t* name, int size,
 						const wchar_t* weight, const wchar_t* style,
 						const wchar_t* decoration) {
-     if (!name || name && !_wcsicmp(name, L"inherit")) {
+     if (!name || name && !wcscmp(name, L"inherit")) {
 	  name = m_font_name.c_str();
      }
 
@@ -177,8 +178,9 @@ litehtml::uint_ptr litehtml::document::get_font(const wchar_t* name, int size,
 	  size = container()->get_default_font_size();
      }
 
+     // convert integer to wchar_t crossplatform way
      wchar_t strSize[20];
-     _itow(size, strSize, 20);
+     swprintf(strSize, sizeof(strSize) / sizeof(*strSize), L"%d", size);
 
      std::wstring key = name;
      key += L":";
@@ -346,29 +348,29 @@ bool litehtml::document::on_lbutton_up(int x, int y,
 litehtml::element::ptr litehtml::document::create_element(
      const wchar_t* tag_name) {
      element::ptr newTag = NULL;
-     if (!_wcsicmp(tag_name, L"br")) {
+     if (!wcscmp(tag_name, L"br")) {
 	  newTag = new litehtml::el_break(this);
-     } else if (!_wcsicmp(tag_name, L"p")) {
+     } else if (!wcscmp(tag_name, L"p")) {
 	  newTag = new litehtml::el_para(this);
-     } else if (!_wcsicmp(tag_name, L"img")) {
+     } else if (!wcscmp(tag_name, L"img")) {
 	  newTag = new litehtml::el_image(this);
-     } else if (!_wcsicmp(tag_name, L"table")) {
+     } else if (!wcscmp(tag_name, L"table")) {
 	  newTag = new litehtml::el_table(this);
-     } else if (!_wcsicmp(tag_name, L"td") || !_wcsicmp(tag_name, L"th")) {
+     } else if (!wcscmp(tag_name, L"td") || !wcscmp(tag_name, L"th")) {
 	  newTag = new litehtml::el_td(this);
-     } else if (!_wcsicmp(tag_name, L"link")) {
+     } else if (!wcscmp(tag_name, L"link")) {
 	  newTag = new litehtml::el_link(this);
-     } else if (!_wcsicmp(tag_name, L"title")) {
+     } else if (!wcscmp(tag_name, L"title")) {
 	  newTag = new litehtml::el_title(this);
-     } else if (!_wcsicmp(tag_name, L"a")) {
+     } else if (!wcscmp(tag_name, L"a")) {
 	  newTag = new litehtml::el_anchor(this);
-     } else if (!_wcsicmp(tag_name, L"tr")) {
+     } else if (!wcscmp(tag_name, L"tr")) {
 	  newTag = new litehtml::element(this);
-     } else if (!_wcsicmp(tag_name, L"style")) {
+     } else if (!wcscmp(tag_name, L"style")) {
 	  newTag = new litehtml::el_style(this);
-     } else if (!_wcsicmp(tag_name, L"base")) {
+     } else if (!wcscmp(tag_name, L"base")) {
 	  newTag = new litehtml::el_base(this);
-     } else if (!_wcsicmp(tag_name, L"body")) {
+     } else if (!wcscmp(tag_name, L"body")) {
 	  newTag = new litehtml::el_body(this);
      } else {
 	  newTag = new litehtml::element(this);
@@ -385,13 +387,13 @@ void litehtml::document::parse_tag_start(const wchar_t* tag_name) {
      parse_pop_empty_element();
 
      // We add the html(root) element before parsing
-     if (!_wcsicmp(tag_name, L"html")) {
+     if (!wcscmp(tag_name, L"html")) {
 	  return;
      }
 
      element::ptr el = create_element(tag_name);
      if (el) {
-	  if (!_wcsicmp(m_parse_stack.back()->get_tagName(), L"html")) {
+	  if (!wcscmp(m_parse_stack.back()->get_tagName(), L"html")) {
 	       // if last element is root we have to add head or body
 	       if (!value_in_list(tag_name, L"head;body")) {
 		    parse_push_element(create_element(L"body"));
@@ -404,13 +406,13 @@ void litehtml::document::parse_tag_start(const wchar_t* tag_name) {
 		    parse_pop_element();
 	       }
 
-	       if (_wcsicmp(m_parse_stack.back()->get_tagName(), L"tr")) {
+	       if (wcscmp(m_parse_stack.back()->get_tagName(), L"tr")) {
 		    parse_push_element(create_element(L"tr"));
 	       }
 	  }
 
 	  // fix <TR>: add tbody into the table
-	  if (!_wcsicmp(tag_name, L"tr")) {
+	  if (!wcscmp(tag_name, L"tr")) {
 	       if (!value_in_list(m_parse_stack.back()->get_tagName(),
 				  L"tbody;thead;tfoot")) {
 		    parse_push_element(create_element(L"tbody"));
@@ -423,7 +425,7 @@ void litehtml::document::parse_tag_start(const wchar_t* tag_name) {
 
 void litehtml::document::parse_tag_end(const wchar_t* tag_name) {
      if (!m_parse_stack.empty()) {
-	  if (!_wcsicmp(m_parse_stack.back()->get_tagName(), tag_name)) {
+	  if (!wcscmp(m_parse_stack.back()->get_tagName(), tag_name)) {
 	       parse_pop_element();
 	  } else {
 	       parse_pop_element(tag_name);
@@ -493,13 +495,13 @@ void litehtml::document::parse_pop_element(const wchar_t* tag) {
      bool found = false;
      for (elements_vector::reverse_iterator iel = m_parse_stack.rbegin();
 	  iel != m_parse_stack.rend(); iel++) {
-	  if (!_wcsicmp((*iel)->get_tagName(), tag)) {
+	  if (!wcscmp((*iel)->get_tagName(), tag)) {
 	       found = true;
 	  }
      }
 
      while (found) {
-	  if (!_wcsicmp(m_parse_stack.back()->get_tagName(), tag)) {
+	  if (!wcscmp(m_parse_stack.back()->get_tagName(), tag)) {
 	       found = false;
 	  }
 	  parse_pop_element();
@@ -510,7 +512,7 @@ void litehtml::document::parse_pop_empty_element() {
      if (!m_parse_stack.empty()) {
 	  bool is_empty_tag = false;
 	  for (int i = 0; g_empty_tags[i]; i++) {
-	       if (!_wcsicmp(m_parse_stack.back()->get_tagName(),
+	       if (!wcscmp(m_parse_stack.back()->get_tagName(),
 			     g_empty_tags[i])) {
 		    is_empty_tag = true;
 		    break;

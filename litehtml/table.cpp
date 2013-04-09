@@ -1,12 +1,13 @@
 #include "html.h"
 #include "table.h"
 #include "element.h"
+#include <cstdlib>
 
 void litehtml::table_grid::add_cell(element* el) {
      table_cell cell;
      cell.el = el;
-     cell.colspan = _wtoi(el->get_attr(L"colspan", L"1"));
-     cell.rowspan = _wtoi(el->get_attr(L"rowspan", L"1"));
+     cell.colspan = wcstol(el->get_attr(L"colspan", L"1"), NULL, 10);
+     cell.rowspan = wcstol(el->get_attr(L"rowspan", L"1"), NULL, 10);
 
      while (is_rowspanned((int) m_cells.size() - 1, (int) m_cells.back().size())) {
 	  m_cells.back().push_back(table_cell());

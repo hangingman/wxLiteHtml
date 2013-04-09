@@ -5,7 +5,11 @@
 #include <ctype.h>
 #include <vector>
 #include <map>
-#include <wx/wx.h>
+
+#ifdef __WXMSW__
+  #include <windows.h>
+#endif
+
 #include "types.h"
 #include "background.h"
 #include "borders.h"

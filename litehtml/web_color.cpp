@@ -126,13 +126,13 @@ litehtml::web_color litehtml::web_color::from_string(const wchar_t* str) {
 	  web_color clr;
 
 	  if (tokens.size() >= 1)
-	       clr.red = (byte) _wtoi(tokens[0].c_str());
+	       clr.red = (byte) wcstol(tokens[0].c_str(), NULL, 10);
 	  if (tokens.size() >= 2)
-	       clr.green = (byte) _wtoi(tokens[1].c_str());
+	       clr.green = (byte) wcstol(tokens[1].c_str(), NULL, 10);
 	  if (tokens.size() >= 3)
-	       clr.blue = (byte) _wtoi(tokens[2].c_str());
+	       clr.blue = (byte) wcstol(tokens[2].c_str(), NULL, 10);
 	  if (tokens.size() >= 4)
-	       clr.alpha = (byte) _wtoi(tokens[3].c_str());
+	       clr.alpha = (byte) wcstol(tokens[3].c_str(), NULL, 10);
 
 	  return clr;
      } else {
@@ -146,7 +146,7 @@ litehtml::web_color litehtml::web_color::from_string(const wchar_t* str) {
 
 const wchar_t* litehtml::web_color::resolve_name(const wchar_t* name) {
      for (int i = 0; g_def_colors[i].name; i++) {
-	  if (!_wcsicmp(name, g_def_colors[i].name)) {
+	  if (!wcscmp(name, g_def_colors[i].name)) {
 	       return g_def_colors[i].rgb;
 	  }
      }
@@ -154,7 +154,8 @@ const wchar_t* litehtml::web_color::resolve_name(const wchar_t* name) {
 }
 
 bool litehtml::web_color::is_color(const wchar_t* str) {
-     if (!_wcsnicmp(str, L"rgb", 3) || str[0] == L'#') {
+
+     if (!wcsncasecmp(str, L"rgb", 3) || str[0] == L'#') {
 	  return true;
      }
      if (resolve_name(str)) {

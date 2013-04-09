@@ -1,11 +1,19 @@
 #ifndef _DOCUMENT_H_
 #define _DOCUMENT_H_
 
+#include <wchar.h>
 #include "object.h"
 #include "style.h"
 #include "types.h"
 #include "xh_scanner.h"
 #include "context.h"
+
+#ifndef __WXMSW__
+  #define FW_BOLD      700
+  #define FW_SEMIBOLD  600
+  #define FW_LIGHT     300
+  #define FW_NORMAL    400 
+#endif
 
 namespace litehtml {
 

@@ -27,7 +27,7 @@ void litehtml::css_length::fromString(const std::wstring& str,
 		    un += *chr;
 	       }
 	  }
-	  m_value = (float) _wtof(num.c_str());
+	  m_value = (float) wcstof(num.c_str(), NULL);
 	  m_units = (css_units) value_index(un.c_str(), css_units_strings,
 					    css_units_none);
      }
