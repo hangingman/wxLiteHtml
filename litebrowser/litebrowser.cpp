@@ -1,43 +1,21 @@
-#include "globals.h"
 #include "litebrowser.h"
-#include "BrowserWnd.h"
 
-#pragma comment( lib, "gdiplus.lib" )
-#pragma comment( lib, "shlwapi.lib" )
+#ifndef __WXMSW__
+  #include"litebrowser.xpm"
+#endif
 
-using namespace Gdiplus;
+wxLiteBrowser::wxLiteBrowser(wxWindow* parent, int id, const wxString& title, const wxPoint& pos, const wxSize& size, long style):
+     wxFrame(parent, id, title, pos, size, wxDEFAULT_FRAME_STYLE) {
 
-int APIENTRY _tWinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPTSTR    lpCmdLine,
-                     int       nCmdShow)
-{
-	InitCommonControls();
-
-	GdiplusStartupInput gdiplusStartupInput;
-	ULONG_PTR gdiplusToken;
-	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-
-	{
-		CBrowserWnd wnd(hInstance);
-
-		wnd.create();
-		if(lpCmdLine)
-		{
-			wnd.open(lpCmdLine);
-		}
-
-		MSG msg;
-
-		while (GetMessage(&msg, NULL, 0, 0))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-	}
-
-	GdiplusShutdown(gdiplusToken);
-
-	return 0;
+     // icon setting
+#ifdef __WXMSW__
+     SetIcon(wxICON(litebrowser));
+#else
+     SetIcon(wxICON(litebrowser));
+#endif
+     // set statusbar
+     this->CreateStatusBar(2);
 }
 
+wxLiteBrowser::~wxLiteBrowser() {
+}
