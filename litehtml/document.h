@@ -15,6 +15,10 @@
   #define FW_NORMAL    400 
 #endif
 
+#ifdef __WXMSW__ 
+  #define swprintf _snwprintf 
+#endif 
+
 namespace litehtml {
 
   struct str_istream: public litehtml::instream {

@@ -9,6 +9,11 @@
 
 #include <stdlib.h> // wchar_t
 #include <string.h> // strcmp, etc.
+
+#ifdef __WXMSW__ 
+  #define wcsncasecmp _wcsnicmp
+#endif 
+
 namespace litehtml {
 typedef wchar_t wchar;
 

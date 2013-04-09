@@ -1,7 +1,9 @@
 #ifndef _WEB_COLOR_H_
 #define _WEB_COLOR_H_
 
-#include <wctype.h>
+#ifdef __WXMSW__ 
+  #define wcsncasecmp _wcsnicmp
+#endif 
 
 namespace litehtml {
   struct def_color {
