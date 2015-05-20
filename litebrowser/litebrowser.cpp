@@ -1,7 +1,7 @@
 #include "litebrowser.h"
 
 #ifndef __WXMSW__
-  #include"litebrowser.xpm"
+//  #include"litebrowser.xpm"
 #endif
 
 wxLiteBrowser::wxLiteBrowser(wxWindow* parent, int id, const wxString& title, const wxPoint& pos, const wxSize& size, long style):
@@ -11,7 +11,7 @@ wxLiteBrowser::wxLiteBrowser(wxWindow* parent, int id, const wxString& title, co
 #ifdef __WXMSW__
      SetIcon(wxICON(litebrowser));
 #else
-     SetIcon(wxICON(litebrowser));
+//   SetIcon(wxICON(litebrowser));
 #endif
      // set statusbar
      this->CreateStatusBar(2);

@@ -66,6 +66,12 @@ if test "$wxWin" != 1; then
 		])
 fi
 
+# Add WX Flags
+CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
+CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS_ONLY"
+CFLAGS="$CFLAGS $WX_CFLAGS_ONLY"
+LIBS="$LIBS $WX_LIBS"
+
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h])
 

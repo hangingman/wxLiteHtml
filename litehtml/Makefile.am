@@ -2,6 +2,7 @@
 ACLOCAL_AMFLAGS = -I m4
 
 lib_LTLIBRARIES = libwxlitehtml.la
+
 libwxlitehtml_la_SOURCES = \
 css_position.h  el_body.h         el_para.h       el_text.h     line.cpp       tokenizer.cpp                   \
 attributes.h    css_selector.cpp  el_break.cpp    el_space.cpp  el_title.cpp   line.h           tokenizer.h    \
@@ -15,5 +16,3 @@ css_length.h    el_base.h         el_link.h       el_td.h       iterators.cpp  t
 css_margins.h   el_body.cpp       el_para.cpp     el_text.cpp   iterators.h    table.h
 
 libwxlitehtml_la_LDFLAGS = -no-undefined -version-info 1:0:0
-
-AM_CXXFLAGS	= @WX_CXXFLAGS_ONLY@
